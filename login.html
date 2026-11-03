@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Login | SAMKAR Network Solutions</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <main class="login-container">
+    <a href="index.html" class="back-link">← Back to SAMKAR</a>
+
+    <section class="login-card">
+      <div class="wifi-icon">⌁</div>
+      <h1>SAMKAR</h1>
+      <p class="subtitle">Client Portal</p>
+
+      <h2>Welcome Back</h2>
+      <p class="description">Sign in to access your client account.</p>
+
+      <form id="loginForm">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          autocomplete="username"
+          placeholder="Enter your registered email"
+          required
+        >
+
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input
+            type="password"
+            id="password"
+            autocomplete="current-password"
+            placeholder="Enter your password"
+            required
+          >
+          <button type="button" id="togglePassword"
+                  class="toggle-password">Show</button>
+        </div>
+
+        <button type="submit" id="loginButton" class="login-button">
+          Sign In
+        </button>
+
+        <p id="loginMessage" class="message" role="status"
+           aria-live="polite"></p>
+      </form>
+
+      <p class="help-text">
+        New to SAMKAR?
+        <a href="register.html">Create a customer account</a>
+      </p>
+    </section>
+
+    <footer>© 2026 SAMKAR Network Solutions</footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+
+  <script>
+    const loginForm = document.getElementById("loginForm");
+    const loginButton = document.getElementById("loginButton");
+    const loginMessage = document.getElementById("loginMessage");
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+
+    let supabaseClient = null;
+
+    function showMessage(message, type) {
+      loginMessage.textContent = message;
+      loginMessage.className = "message " + type;
+    }
+
+    // Check that the existing Supabase configuration is available.
+    if (
+      !window.supabase ||
+      typeof SUPABASE_URL === "undefined" ||
+      typeof SUPABASE_PUBLISHABLE_KEY === "undefined"
+    ) {
+      showMessage(
+        "Supabase could not load. Check your internet connection " +
+        "and supabase-config.js.",
+        "error"
+      );
+      loginButton.disabled = true;
+    } else {
+      supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
+    }
+
+    togglePassword.addEventListener("click", () => {
+      const showing = passwordInput.type === "text";
+      passwordInput.type = showing ? "password" : "text";
+      togglePassword.textContent = showing ? "Show" : "Hide";
+    });
+
+    /*
+      Synchronize a registered customer's metadata into profiles.
+
+      This uses the authenticated customer's own ID. The existing
+      profiles RLS policies must permit users to insert/update their
+      own profile.
+    */
+    async function synchronizeCustomerProfile(user) {
+      const metadata = user.user_metadata || {};
+
+      const fullName = String(metadata.full_name || "").trim();
+      const phone = String(metadata.phone || "").trim();
+      const serviceLocation =
+        String(metadata.service_location || "").trim();
+
+      // Do not overwrite a profile with incomplete registration data.
+      if (!fullName || !phone || !serviceLocation) {
+        return {
+          saved: false,
+          reason: "missing_metadata"
+        };
+      }
+
+      const { error } = await supabaseClient
+        .from("profiles")
+        .upsert(
+          {
+            id: user.id,
+            full_name: fullName,
+            phone: phone,
+            service_location: serviceLocation,
+            updated_at: new Date().toISOString()
+          },
+          {
+            onConflict: "id"
+          }
+        );
+
+      if (error) {
+        console.error("Customer profile synchronization failed:", error);
+
+        return {
+          saved: false,
+          reason: "database_error",
+          message: error.message
+        };
+      }
+
+      return { saved: true };
+    }
+
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!supabaseClient) {
+        showMessage(
+          "Supabase is not configured correctly. Please try again later.",
+          "error"
+        );
+        return;
+      }
+
+      loginButton.disabled = true;
+      loginButton.textContent = "Signing in...";
+      loginMessage.textContent = "";
+      loginMessage.className = "message";
+
+      const email = document.getElementById("email").value.trim();
+      const password = passwordInput.value;
+
+      try {
+        const { data, error } =
+          await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+          });
+
+        if (error) throw error;
+
+        if (!data.session || !data.user) {
+          throw new Error(
+            "Sign-in was not completed. Please try again."
+          );
+        }
+
+        // Sync the registration data before opening the dashboard.
+        const profileResult =
+          await synchronizeCustomerProfile(data.user);
+
+        if (profileResult.saved) {
+          showMessage(
+            "Login successful and customer profile synchronized. " +
+            "Opening your account...",
+            "success"
+          );
+        } else if (profileResult.reason === "missing_metadata") {
+          showMessage(
+            "Login successful. Some registration details are missing. " +
+            "You can complete your profile in the client dashboard.",
+            "success"
+          );
+        } else {
+          /*
+            Do not lock a customer out just because profile synchronization
+            failed. The dashboard can still open; show a clear warning.
+          */
+          showMessage(
+            "Login successful, but your profile could not be synchronized. " +
+            "Please check your profile details or contact SAMKAR support. " +
+            "Database message: " + profileResult.message,
+            "error"
+          );
+        }
+
+        // Give the customer a moment to read the status message.
+        window.setTimeout(() => {
+          window.location.replace("client-dashboard.html");
+        }, 1200);
+
+      } catch (error) {
+        console.error("Login error:", error);
+
+        let message = error.message || "Unable to sign in. Please try again.";
+
+        if (message === "Invalid login credentials") {
+          message = "Incorrect email or password. Please try again.";
+        } else if (
+          message.toLowerCase().includes("email not confirmed")
+        ) {
+          message =
+            "Please confirm your email address using the link sent " +
+            "by Supabase before signing in.";
+        }
+
+        showMessage(message, "error");
+
+      } finally {
+        loginButton.disabled = false;
+        loginButton.textContent = "Sign In";
+      }
+    });
+  </script>
+</body>
+</html>

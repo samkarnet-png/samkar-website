@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#061b38">
+  <meta name="description" content="SAMKAR Network Solutions provides reliable WiFi installation, internet packages and network support.">
+  <title>SAMKAR Network Solutions | Reliable WiFi & Networking</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    /* Public coverage map only. Main website styling remains in style.css. */
+    .coverage-map-section{padding:64px 5%;background:#f1f7fc;color:#17283d}
+    .coverage-map-inner{max-width:1240px;margin:0 auto}
+    .coverage-map-heading{text-align:center;max-width:780px;margin:0 auto 26px}
+    .coverage-map-kicker{display:inline-block;color:#0757a5;font-size:.78rem;font-weight:800;letter-spacing:.12em;margin-bottom:8px}
+    .coverage-map-heading h2{color:#061b38;font-size:clamp(1.8rem,4vw,2.5rem);margin:0 0 10px}
+    .coverage-map-heading p{margin:0;color:#52657b;line-height:1.7}
+    .coverage-map-panel{background:#fff;border:1px solid #d8e2ee;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px #061b3810}
+    .coverage-map-toolbar{display:flex;gap:8px;flex-wrap:wrap;padding:15px;border-bottom:1px solid #e2eaf2}
+    .coverage-map-location{border:1px solid #d4dfeb;border-radius:999px;background:#f5f8fc;color:#061b38;padding:9px 14px;font:inherit;font-size:.9rem;font-weight:700;cursor:pointer}
+    .coverage-map-location:hover,.coverage-map-location.active{background:#0757a5;border-color:#0757a5;color:#fff}
+    #samkar-coverage-map{width:100%;height:clamp(360px,58vw,620px);min-height:360px;background:#e7eef5;z-index:1}
+    .coverage-map-legend{display:flex;gap:18px;flex-wrap:wrap;padding:13px 16px 4px;font-size:.85rem;color:#35485e}
+    .coverage-map-legend span{display:inline-flex;align-items:center;gap:8px}
+    .coverage-legend-dot{display:inline-block;width:13px;height:13px;border-radius:50%;background:#d71920;border:2px solid white;box-shadow:0 0 0 1px #a30f17}
+    .coverage-legend-area{display:inline-block;width:18px;height:13px;background:#ffc40055;border:2px solid #d9a900}
+    .coverage-map-status{margin:10px 16px 8px;padding:10px 12px;border-radius:8px;background:#f3f7fb;color:#42566c;font-size:.9rem;line-height:1.5}
+    .coverage-map-status.error{background:#fff1f0;color:#a5221b}
+    .coverage-map-attribution-note{margin:0;padding:0 16px 15px;color:#64748b;font-size:.75rem;line-height:1.5}
+    .samkar-map-popup strong{display:block;color:#061b38;margin-bottom:3px}
+    .samkar-map-popup p{margin:4px 0;color:#52657b;font-size:13px;line-height:1.5}
+    @media(max-width:600px){.coverage-map-section{padding:44px 4%}.coverage-map-toolbar{gap:6px;padding:10px}.coverage-map-location{padding:8px 11px;font-size:.82rem}#samkar-coverage-map{height:430px;min-height:350px}}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container nav-container">
+      <a class="logo" href="#home" aria-label="SAMKAR Network Solutions home">
+        <span class="logo-brand"><div class="wifi-logo" aria-hidden="true"><i class="wifi-arc arc-one"></i><i class="wifi-arc arc-two"></i><i class="wifi-arc arc-three"></i><i class="wifi-dot"></i></div><span>SAMKAR</span></span>
+        <small>NETWORK SOLUTIONS</small>
+      </a>
+      <nav class="navbar" aria-label="Main navigation">
+        <a href="#home" class="active">Home</a>
+        <a href="#coverage-map">Coverage Map</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#locations">Packages</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+        <a href="login.html" class="header-login"><span class="login-symbol">↗</span> Client Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <p class="hero-tagline">CONNECTING HOMES. EMPOWERING BUSINESSES.</p>
+        <h1>SAMKAR NETWORK SOLUTIONS</h1>
+        <h2>Reliable Internet. Professional Networking.</h2>
+        <div class="hero-login">
+          <div class="hero-login-icon" aria-hidden="true">⌁</div>
+          <p class="hero-login-label">YOUR CONNECTION STARTS HERE</p>
+          <h3>Manage Your Internet Account</h3>
+          <p class="hero-login-description">Access your account, view your subscription and manage your internet services online.</p>
+          <a class="hero-login-button" href="login.html"><span>Client Login</span><span class="hero-login-arrow">→</span></a>
+          <p class="hero-login-note">Already a SAMKAR customer? Sign in to continue.</p>
+          <p class="hero-login-note">New customer? Contact our team to get connected.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Published map features come from the same Supabase table used by map-editor.html. -->
+    <section id="coverage-map" class="coverage-map-section">
+      <div class="coverage-map-inner">
+        <div class="coverage-map-heading">
+          <span class="coverage-map-kicker">SAMKAR NETWORK SOLUTIONS</span>
+          <h2>Our Coverage Map</h2>
+          <p>Explore confirmed service coverage and published installation locations. Only locations and coverage areas published by SAMKAR's administrator appear here.</p>
+        </div>
+        <div class="coverage-map-panel">
+          <div class="coverage-map-toolbar" aria-label="Filter published map features by area">
+            <button type="button" class="coverage-map-location active" data-area="all">All published locations</button>
+            <button type="button" class="coverage-map-location" data-area="Nyahururu">Nyahururu</button>
+            <button type="button" class="coverage-map-location" data-area="Maralal">Maralal</button>
+            <button type="button" class="coverage-map-location" data-area="Ol Kalou">Ol Kalou</button>
+            <button type="button" class="coverage-map-location" data-area="MA4">MA4</button>
+          </div>
+          <div id="samkar-coverage-map" role="region" aria-label="Interactive SAMKAR published coverage map"></div>
+          <div class="coverage-map-legend">
+            <span><i class="coverage-legend-dot"></i> Published installation / equipment point</span>
+            <span><i class="coverage-legend-area"></i> Confirmed published coverage area</span>
+          </div>
+          <p id="samkar-map-status" class="coverage-map-status" role="status" aria-live="polite">Loading published map features…</p>
+          <p class="coverage-map-attribution-note">Map data © OpenStreetMap contributors and Esri. Map features are managed by SAMKAR Network Solutions.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about-section" id="about">
+      <div class="container">
+        <div class="section-heading center"><p class="section-label">WHO WE ARE</p><h2>About <span>SAMKAR</span></h2><p class="section-intro">Practical internet and networking solutions designed to keep homes, businesses and communities connected.</p></div>
+        <div class="about-content">
+          <div class="about-text"><h3>Reliable connectivity you can count on</h3><p>SAMKAR Network Solutions provides internet connectivity, WiFi installation and networking services with a focus on dependable service and responsive support.</p><p>From home internet to business network installations, our goal is to make connectivity accessible, stable and simple to manage.</p></div>
+          <div class="about-box"><div class="about-icon" aria-hidden="true">⌁</div><h3>Connecting people and places</h3><p>We help customers get connected with suitable packages, professional installations and ongoing support.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section services-section" id="services">
+      <div class="container">
+        <div class="section-heading center"><p class="section-label">WHAT WE DO</p><h2>Our <span>Services</span></h2><p class="section-intro">Internet and technology services for homes, businesses and institutions.</p></div>
+        <div class="services-grid">
+          <article class="service-card"><div class="service-icon" aria-hidden="true">⌁</div><h3>WiFi Installation</h3><p>Professional WiFi setup and configuration for homes, shops and offices.</p></article>
+          <article class="service-card"><div class="service-icon" aria-hidden="true">▤</div><h3>Internet Connectivity</h3><p>Monthly internet packages for customers in our confirmed service areas.</p></article>
+          <article class="service-card"><div class="service-icon" aria-hidden="true">⌘</div><h3>Network Solutions</h3><p>Network planning, router setup, troubleshooting and connectivity support.</p></article>
+          <article class="service-card"><div class="service-icon" aria-hidden="true">▣</div><h3>Network Maintenance</h3><p>Help diagnosing connection problems and maintaining installed network equipment.</p></article>
+          <article class="service-card"><div class="service-icon" aria-hidden="true">⌂</div><h3>Business Networking</h3><p>Connectivity solutions for offices, retail spaces and other business environments.</p></article>
+          <article class="service-card"><div class="service-icon" aria-hidden="true">◉</div><h3>Customer Support</h3><p>Assistance with internet accounts, packages, billing and technical concerns.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section locations-section" id="locations">
+      <div class="container">
+        <div class="section-heading center"><p class="section-label">CHOOSE YOUR CONNECTION</p><h2>Internet <span>Packages</span></h2><p class="section-intro">Select your area to view the available monthly packages. Confirm availability with SAMKAR before subscribing.</p></div>
+        <div class="location-selector" role="group" aria-label="Select service area">
+          <button class="location-button active" type="button" data-location="Nyahururu">Nyahururu</button>
+          <button class="location-button" type="button" data-location="Maralal">Maralal</button>
+          <button class="location-button" type="button" data-location="Ol Kalou">Ol Kalou</button>
+          <button class="location-button" type="button" data-location="ma4">MA4</button>
+        </div>
+        <div class="location-heading"><h3><span class="location-marker">⌖</span><span id="selected-location-name">Nyahururu</span></h3><p>MONTHLY INTERNET PLANS</p></div>
+        <div class="packages-grid" id="packages-grid" aria-live="polite"></div>
+        <p class="package-note">Prices are monthly in Kenya Shillings (KSh). Contact SAMKAR to confirm service availability and installation details.</p>
+      </div>
+    </section>
+
+    <section class="section why-section" id="why-us">
+      <div class="container"><div class="section-heading center"><p class="section-label">THE SAMKAR DIFFERENCE</p><h2>Why Choose <span>Us</span></h2><p class="section-intro">A customer-focused approach to reliable internet and networking.</p></div>
+        <div class="why-grid">
+          <article class="why-card"><div class="why-number">01</div><h3>Dependable Support</h3><p>Help with service questions, connectivity issues and account management.</p></article>
+          <article class="why-card"><div class="why-number">02</div><h3>Clear Packages</h3><p>Monthly plans with prices displayed clearly for each listed service area.</p></article>
+          <article class="why-card"><div class="why-number">03</div><h3>Professional Setup</h3><p>Installation and configuration focused on your home or business needs.</p></article>
+          <article class="why-card"><div class="why-number">04</div><h3>Account Access</h3><p>Use the customer portal to access your account and available billing features.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section projects-section" id="projects">
+      <div class="container"><div class="section-heading center"><p class="section-label">OUR WORK</p><h2>Projects & <span>Installations</span></h2><p class="section-intro">Examples of networking and installation work. Replace these images with your confirmed SAMKAR project photos when ready.</p></div>
+        <div class="projects-grid">
+          <div class="project-card"><img src="project1.jpg" alt="SAMKAR networking project" loading="lazy" onerror="this.style.display='none'"></div>
+          <div class="project-card"><img src="project2.jpg" alt="SAMKAR WiFi installation project" loading="lazy" onerror="this.style.display='none'"></div>
+          <div class="project-card"><img src="project3.jpg" alt="SAMKAR network equipment project" loading="lazy" onerror="this.style.display='none'"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contact">
+      <div class="container"><div class="section-heading center"><p class="section-label">GET IN TOUCH</p><h2>Contact <span>SAMKAR</span></h2><p class="section-intro">Talk to our team about new installations, packages, account questions or technical support.</p></div>
+        <div class="contact-grid">
+          <article class="contact-card"><div class="contact-icon" aria-hidden="true">☎</div><h3>Call Us</h3><a class="contact-value" href="tel:0714544444">0714 544 444</a><div class="contact-actions"><a class="contact-btn" href="tel:0714544444">Call now</a><a class="contact-btn whatsapp-btn" href="https://wa.me/254703126213" target="_blank" rel="noopener">WhatsApp</a></div></article>
+          <article class="contact-card"><div class="contact-icon" aria-hidden="true">☎</div><h3>WhatsApp / Support</h3><a class="contact-value" href="tel:0703126213">0703 126 213</a><div class="contact-actions"><a class="contact-btn" href="tel:0703126213">Call now</a><a class="contact-btn whatsapp-btn" href="https://wa.me/254703126213" target="_blank" rel="noopener">WhatsApp</a></div></article>
+          <article class="contact-card"><div class="contact-icon" aria-hidden="true">✉</div><h3>Email Us</h3><a class="contact-value email-value" href="mailto:samkarnetworks@gmail.com">samkarnetworks@gmail.com</a><div class="contact-actions"><a class="contact-btn email-btn" href="mailto:samkarnetworks@gmail.com">Send email</a></div></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container footer-content"><div class="footer-brand"><h3>SAMKAR</h3><p>NETWORK SOLUTIONS</p></div><div class="footer-info"><p>Reliable Internet. Professional Networking.</p><p>&copy; <span id="current-year"></span> SAMKAR Network Solutions. All rights reserved.</p></div></div></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+  (function(){
+    'use strict';
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // Monthly package data retained from the SAMKAR public site details.
+    const packageData = {
+      'Nyahururu': [{speed:8,price:1500},{speed:12,price:2000},{speed:20,price:2500},{speed:25,price:3000},{speed:30,price:3500}],
+      'Maralal': [{speed:12,price:2000},{speed:15,price:2500},{speed:20,price:3000},{speed:25,price:3500},{speed:35,price:4000}],
+      'Ol Kalou': [{speed:8,price:1500},{speed:12,price:2000},{speed:20,price:2500},{speed:25,price:3000},{speed:30,price:3500}],
+      'ma4': [{speed:8,price:1500},{speed:12,price:2000},{speed:20,price:2500},{speed:25,price:3000},{speed:30,price:3500}]
+    };
+    const packagesGrid = document.getElementById('packages-grid');
+    const locationName = document.getElementById('selected-location-name');
+    function renderPackages(location){
+      const plans = packageData[location] || packageData['Nyahururu'];
+      locationName.textContent = location === 'ma4' ? 'MA4' : location;
+      packagesGrid.innerHTML = plans.map(function(plan){
+        return '<article class="package-card"><h3 class="package-speed">'+plan.speed+' Mbps</h3><div class="package-price"><span>KSh</span><strong>'+plan.price.toLocaleString('en-KE')+'</strong></div><p class="package-description">Monthly home internet package</p><a class="package-button" href="https://wa.me/254703126213?text='+encodeURIComponent('Hello SAMKAR, I would like to enquire about the '+plan.speed+' Mbps monthly package in '+(location==='ma4'?'MA4':location)+'.')+'" target="_blank" rel="noopener">Enquire now</a></article>';
+      }).join('');
+    }
+    document.querySelectorAll('.location-button').forEach(function(button){
+      button.addEventListener('click',function(){
+        document.querySelectorAll('.location-button').forEach(function(item){item.classList.remove('active');});
+        button.classList.add('active');
+        renderPackages(button.dataset.location || 'Nyahururu');
+      });
+    });
+    renderPackages('Nyahururu');
+
+    const mapElement = document.getElementById('samkar-coverage-map');
+    const status = document.getElementById('samkar-map-status');
+    function setMapStatus(message,isError){status.textContent=message;status.classList.toggle('error',Boolean(isError));}
+    function escapeHtml(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+    function typeLabel(type){return ({mast:'Mast / tower',equipment:'Network equipment',installation:'Existing installation',coverage:'Confirmed service coverage area',power_point:'Power / relay point',other:'Network location'})[type]||'Network location';}
+
+    if(!window.L){
+      setMapStatus('The map library did not load. Check your connection or browser content blockers, then refresh the page.',true);
+      return;
+    }
+    if(!window.supabase){
+      setMapStatus('The Supabase library did not load. Check your connection or browser content blockers, then refresh the page.',true);
+      return;
+    }
+
+    // Existing SAMKAR Supabase connection - unchanged.
+    const SUPABASE_URL='https://nslhngxarkhtcnskhrsq.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY='sb_publishable_4tRM5qgAR48h1yIsVljHxQ_s8vPPOMF';
+    const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+    // Initialize the public map.
+    const map=L.map(mapElement,{scrollWheelZoom:false}).setView([-0.0333,36.3667],9);
+
+    /*
+      FIX: Replace the blocked OpenStreetMap tile server with
+      Esri World Street Map raster tiles.
+
+      Leaflet requires the tile coordinates in z/y/x order.
+      The Supabase markers and coverage polygons are NOT changed.
+    */
+    const baseTiles=L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+      {
+        maxZoom:19,
+        attribution:'Tiles &copy; Esri, HERE, Garmin, USGS, Intermap, and the GIS User Community'
+      }
+    ).addTo(map);
+
+    let tileErrorCount=0;
+    let tileSuccessCount=0;
+
+    baseTiles.on('tileerror',function(){
+      tileErrorCount++;
+      if(tileSuccessCount===0 && tileErrorCount>=3){
+        setMapStatus('The background map tiles could not be reached. Check your internet connection or network restrictions.',true);
+      }
+    });
+
+    baseTiles.on('tileload',function(){
+      tileSuccessCount++;
+      if(tileSuccessCount===1){
+        setMapStatus('Background map loaded. Loading SAMKAR published locations…',false);
+      }
+    });
+
+    let publishedFeatures=[];
+    let renderedLayers=L.featureGroup().addTo(map);
+
+    function renderFeatures(area){
+      renderedLayers.clearLayers();
+
+      const needle=String(area||'all').toLowerCase();
+
+      const matching=publishedFeatures.filter(function(feature){
+        if(needle==='all')return true;
+        return (String(feature.name||'')+' '+String(feature.description||'')).toLowerCase().includes(needle);
+      });
+
+      matching.forEach(function(feature){
+        let geometry=feature.geometry;
+
+        if(typeof geometry==='string'){
+          try{
+            geometry=JSON.parse(geometry);
+          }catch(_){
+            return;
+          }
+        }
+
+        if(!geometry||!geometry.type||!geometry.coordinates)return;
+
+        const layer=L.geoJSON(
+          {type:'Feature',properties:{},geometry:geometry},
+          {
+            style:function(){
+              return {
+                color:'#d4a900',
+                weight:3,
+                fillColor:'#ffc400',
+                fillOpacity:0.28
+              };
+            },
+            pointToLayer:function(_feature,latlng){
+              return L.circleMarker(latlng,{
+                radius:9,
+                color:'#ffffff',
+                weight:3,
+                fillColor:'#d62828',
+                fillOpacity:1
+              });
+            }
+          }
+        );
+
+        const popup=
+          '<div class="samkar-map-popup">'+
+          '<strong>'+escapeHtml(feature.name||typeLabel(feature.feature_type))+'</strong>'+
+          '<p>'+escapeHtml(typeLabel(feature.feature_type))+'</p>'+
+          (feature.description?'<p>'+escapeHtml(feature.description)+'</p>':'')+
+          (feature.power_value!==null&&feature.power_value!==undefined&&feature.power_value!==''?
+          '<p>Signal / power: '+escapeHtml(feature.power_value)+' '+escapeHtml(feature.power_unit||'')+'</p>':'')+
+          '</div>';
+
+        layer.bindPopup(popup);
+        renderedLayers.addLayer(layer);
+      });
+
+      if(matching.length&&renderedLayers.getLayers().length){
+        const bounds=renderedLayers.getBounds();
+
+        if(bounds.isValid()){
+          map.fitBounds(bounds,{
+            padding:[24,24],
+            maxZoom:15
+          });
+        }
+
+        setMapStatus(
+          'Showing '+renderedLayers.getLayers().length+
+          ' published feature(s)'+
+          (needle==='all'?'.':' matching “'+area+'”.'),
+          false
+        );
+
+      }else if(needle!=='all'){
+
+        setMapStatus(
+          'No published map features are labelled “'+area+
+          '” yet. No locations or boundaries have been invented.',
+          false
+        );
+
+      }else{
+
+        setMapStatus(
+          'The map is visible, but no published features were returned. Check that features are marked Published in the map editor and that Supabase allows public SELECT on published rows.',
+          false
+        );
+      }
+    }
+
+    async function loadPublishedFeatures(){
+      setMapStatus('Loading published map features…',false);
+
+      const result=await supabaseClient
+        .from('network_map_features')
+        .select('id,name,feature_type,description,power_value,power_unit,geometry,is_published')
+        .eq('is_published',true);
+
+      if(result.error){
+        setMapStatus(
+          'Could not load published map features: '+
+          result.error.message+
+          '. Check the network_map_features public read policy in Supabase.',
+          true
+        );
+        return;
+      }
+
+      publishedFeatures=result.data||[];
+      renderFeatures('all');
+    }
+
+    document.querySelectorAll('.coverage-map-location').forEach(function(button){
+      button.addEventListener('click',function(){
+        document.querySelectorAll('.coverage-map-location').forEach(function(item){
+          item.classList.remove('active');
+        });
+
+        button.classList.add('active');
+        renderFeatures(button.dataset.area||'all');
+      });
+    });
+
+    loadPublishedFeatures().catch(function(error){
+      setMapStatus(
+        'Unexpected map loading error: '+
+        (error&&error.message?error.message:'Unknown error'),
+        true
+      );
+    });
+
+    window.addEventListener('resize',function(){
+      map.invalidateSize();
+    });
+
+    if('IntersectionObserver' in window){
+      const observer=new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            map.invalidateSize();
+            observer.disconnect();
+          }
+        });
+      });
+
+      observer.observe(mapElement);
+    }else{
+      setTimeout(function(){
+        map.invalidateSize();
+      },300);
+    }
+
+  })();
+  </script>
+</body>
+</html>

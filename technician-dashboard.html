@@ -1,0 +1,750 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#061b38">
+  <title>Technician Portal | SAMKAR Network Solutions</title>
+
+  <style>
+    :root {
+      --navy: #061b38;
+      --blue: #0757a5;
+      --yellow: #ffc400;
+      --light: #f1f7fc;
+      --white: #ffffff;
+      --text: #25344a;
+      --muted: #64748b;
+      --border: #e1e8f0;
+      --green: #166534;
+      --red: #991b1b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    [hidden] { display: none !important; }
+
+    .topbar {
+      background: var(--navy);
+      color: white;
+      padding: 16px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: .7px;
+      font-size: 1.2rem;
+    }
+
+    .brand span { color: var(--yellow); }
+
+    .topright {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .email {
+      color: #dce8f6;
+      font-size: .9rem;
+      overflow-wrap: anywhere;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-weight: 700;
+    }
+
+    .btn:disabled { opacity: .6; cursor: wait; }
+    .primary { background: var(--yellow); color: var(--navy); }
+    .secondary { background: #e8f1fb; color: var(--navy); }
+    .full { width: 100%; margin-top: 18px; }
+
+    .container {
+      width: min(1180px, 92%);
+      margin: 28px auto;
+    }
+
+    .hero {
+      background: linear-gradient(120deg, var(--navy), var(--blue));
+      color: white;
+      border-radius: 16px;
+      padding: 26px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      margin-bottom: 6px;
+    }
+
+    .hero p { color: #e0eaf5; }
+
+    .panel, .login-card, .access {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .login-wrap {
+      width: min(470px, 92%);
+      margin: 55px auto;
+    }
+
+    .login-card h1, .access h1 {
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .login-card .intro, .access p {
+      color: var(--muted);
+      margin: 8px 0 20px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 15px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: .92rem;
+      color: var(--navy);
+    }
+
+    .field input, .field select, .field textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px;
+      background: white;
+      color: var(--text);
+    }
+
+    .field textarea { min-height: 90px; resize: vertical; }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .panel h2 { font-size: 1.2rem; color: var(--navy); }
+    .muted { font-size: .9rem; color: var(--muted); }
+
+    .notice {
+      padding: 12px 14px;
+      border-radius: 9px;
+      margin: 14px 0;
+      display: none;
+      overflow-wrap: anywhere;
+    }
+
+    .notice.show { display: block; }
+    .notice.success { background: #dcfce7; color: var(--green); }
+    .notice.error { background: #fee2e2; color: var(--red); }
+    .notice.info { background: #dbeafe; color: #1e40af; }
+
+    .job-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 16px;
+    }
+
+    .job {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      background: white;
+    }
+
+    .job h3 { color: var(--navy); margin-bottom: 8px; }
+    .job p { margin: 7px 0; overflow-wrap: anywhere; }
+    .job-label { font-weight: 700; color: var(--navy); }
+
+    .badge {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+
+    .badge.in_progress { background: #ede9fe; color: #6d28d9; }
+    .badge.completed { background: #dcfce7; color: #166534; }
+
+    .job-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      background: white;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      grid-column: 1 / -1;
+    }
+
+    .access {
+      max-width: 650px;
+      margin: 55px auto;
+      width: 92%;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: .85rem;
+      padding: 24px;
+    }
+
+    @media (max-width: 520px) {
+      .container { width: 94%; margin: 18px auto; }
+      .hero, .panel, .login-card { padding: 18px; }
+      .topbar { padding: 14px 4%; }
+      .access { margin: 25px auto; padding: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand"><span>◆</span> SAMKAR <span>TECHNICIAN</span></div>
+    <div class="topright">
+      <span class="email" id="userEmail" hidden></span>
+      <button id="logoutButton" class="btn primary" type="button" hidden>
+        Sign out
+      </button>
+    </div>
+  </header>
+
+  <!-- Technician sign-in form -->
+  <main class="login-wrap" id="loginView" hidden>
+    <section class="login-card">
+      <h1>Technician Sign In</h1>
+      <p class="intro">
+        Sign in with the email address and password assigned to your
+        SAMKAR technician account.
+      </p>
+
+      <div id="loginNotice" class="notice" role="status" aria-live="polite"></div>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Technician email</label>
+          <input
+            type="email"
+            id="email"
+            autocomplete="username"
+            placeholder="Enter your technician email"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            autocomplete="current-password"
+            placeholder="Enter your password"
+            required
+          >
+        </div>
+
+        <button id="loginButton" class="btn primary full" type="submit">
+          Sign in to technician portal
+        </button>
+      </form>
+
+      <p class="muted" style="margin-top:18px">
+        Don't have a technician login? Contact the SAMKAR administrator.
+      </p>
+    </section>
+  </main>
+
+  <!-- Technician dashboard -->
+  <main class="container" id="dashboard" hidden>
+    <section class="hero">
+      <h1>Technician Job Portal</h1>
+      <p>
+        View your assigned customer requests, update job progress,
+        mark completed work, and send feedback to the administrator.
+      </p>
+    </section>
+
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>My assigned jobs</h2>
+          <p class="muted" id="techDetails">Loading technician profile...</p>
+        </div>
+        <button id="refreshButton" class="btn secondary" type="button">
+          Refresh jobs
+        </button>
+      </div>
+
+      <div id="jobs" class="job-grid">
+        <div class="empty">Loading your assigned requests...</div>
+      </div>
+    </section>
+
+    <footer class="footer">SAMKAR Network Solutions · Technician access</footer>
+  </main>
+
+  <!-- Shown when a non-technician account is signed in -->
+  <section class="access" id="accessCard" hidden>
+    <h1>Technician account not linked</h1>
+    <p id="accessMessage">
+      This account is not linked to an active SAMKAR technician record.
+    </p>
+    <button id="switchAccountButton" class="btn primary" type="button">
+      Sign out and use technician login
+    </button>
+  </section>
+
+  <section class="access" id="errorCard" hidden>
+    <h1>Unable to open technician portal</h1>
+    <p id="errorText">Check the Supabase configuration and connection.</p>
+    <button id="errorBackButton" class="btn secondary" type="button">
+      Return to sign in
+    </button>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+
+  <script>
+  (() => {
+    const $ = id => document.getElementById(id);
+
+    let client = null;
+    let user = null;
+    let technician = null;
+
+    function showNotice(elementId, message, type = 'info') {
+      const element = $(elementId);
+      element.textContent = message;
+      element.className = `notice show ${type}`;
+    }
+
+    function hideViews() {
+      $('loginView').hidden = true;
+      $('dashboard').hidden = true;
+      $('accessCard').hidden = true;
+      $('errorCard').hidden = true;
+    }
+
+    function showLogin(message = '') {
+      hideViews();
+      $('loginView').hidden = false;
+      $('userEmail').hidden = true;
+      $('logoutButton').hidden = true;
+      $('loginNotice').className = 'notice';
+      $('loginNotice').textContent = '';
+
+      if (message) showNotice('loginNotice', message, 'info');
+    }
+
+    function showError(message) {
+      hideViews();
+      $('errorCard').hidden = false;
+      $('errorText').textContent = message;
+      $('userEmail').hidden = true;
+      $('logoutButton').hidden = true;
+    }
+
+    function notice(message, type = 'info') {
+      showNotice('notice', message, type);
+    }
+
+    function makeText(tag, value, className) {
+      const element = document.createElement(tag);
+      element.textContent = value ?? '—';
+      if (className) element.className = className;
+      return element;
+    }
+
+    function formatDate(value) {
+      if (!value) return 'Not scheduled';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return 'Not scheduled';
+
+      return date.toLocaleString('en-KE', {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      });
+    }
+
+    async function signOutAndShowLogin(message = '') {
+      if (client) {
+        const { error } = await client.auth.signOut();
+        if (error) {
+          showError(`Could not sign out: ${error.message}`);
+          return;
+        }
+      }
+
+      user = null;
+      technician = null;
+      showLogin(message);
+    }
+
+    async function loadJobs() {
+      $('refreshButton').disabled = true;
+      $('refreshButton').textContent = 'Refreshing…';
+      $('jobs').replaceChildren();
+
+      try {
+        const { data, error } = await client
+          .from('service_requests')
+          .select(
+            'id,request_type,phone,details,service_location,package_name,' +
+            'speed_mbps,monthly_price_kes,status,created_at,scheduled_for,' +
+            'technician_feedback,technician_feedback_at'
+          )
+          .eq('technician_id', technician.id)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          $('jobs').appendChild(
+            makeText(
+              'div',
+              'No jobs are assigned to you yet. Check again later.',
+              'empty'
+            )
+          );
+          return;
+        }
+
+        for (const job of data) {
+          const card = document.createElement('article');
+          card.className = 'job';
+
+          card.appendChild(
+            makeText('h3', job.request_type || 'Customer service request')
+          );
+
+          const currentStatus = job.status || 'pending';
+          card.appendChild(
+            makeText(
+              'span',
+              currentStatus.replaceAll('_', ' '),
+              `badge ${currentStatus}`
+            )
+          );
+
+          const packageLine = job.package_name
+            ? `${job.package_name}` +
+              `${job.speed_mbps ? ` · ${job.speed_mbps} Mbps` : ''}` +
+              `${job.monthly_price_kes != null
+                ? ` · KSh ${Number(job.monthly_price_kes).toLocaleString()}/month`
+                : ''}`
+            : 'Not specified';
+
+          const details = [
+            ['Customer phone', job.phone || 'Not provided'],
+            ['Service location', job.service_location || technician.service_area],
+            ['Package', packageLine],
+            ['Customer request', job.details || 'No details provided'],
+            ['Submitted', formatDate(job.created_at)],
+            ['Scheduled visit', formatDate(job.scheduled_for)]
+          ];
+
+          for (const [label, value] of details) {
+            const paragraph = document.createElement('p');
+            paragraph.appendChild(makeText('span', `${label}: `, 'job-label'));
+            paragraph.appendChild(document.createTextNode(String(value ?? '—')));
+            card.appendChild(paragraph);
+          }
+
+          const statusField = document.createElement('div');
+          statusField.className = 'field';
+          statusField.appendChild(makeText('label', 'Update job status'));
+
+          const status = document.createElement('select');
+          status.setAttribute('aria-label', 'Update job status');
+
+          [
+            ['pending', 'Pending'],
+            ['in_progress', 'In progress'],
+            ['completed', 'Done / completed']
+          ].forEach(([value, label]) => {
+            status.add(new Option(label, value));
+          });
+
+          status.value = [
+            'pending', 'in_progress', 'completed'
+          ].includes(job.status) ? job.status : 'pending';
+
+          statusField.appendChild(status);
+          card.appendChild(statusField);
+
+          const feedbackField = document.createElement('div');
+          feedbackField.className = 'field';
+          feedbackField.appendChild(
+            makeText('label', 'Feedback to administrator')
+          );
+
+          const feedback = document.createElement('textarea');
+          feedback.maxLength = 2000;
+          feedback.placeholder =
+            'Explain progress, access issues, parts needed, or completed work.';
+          feedback.value = job.technician_feedback || '';
+
+          feedbackField.appendChild(feedback);
+          card.appendChild(feedbackField);
+
+          if (job.technician_feedback_at) {
+            card.appendChild(
+              makeText(
+                'p',
+                `Last feedback sent: ${formatDate(job.technician_feedback_at)}`,
+                'muted'
+              )
+            );
+          }
+
+          const actions = document.createElement('div');
+          actions.className = 'job-actions';
+
+          const saveButton = document.createElement('button');
+          saveButton.type = 'button';
+          saveButton.className = 'btn primary';
+          saveButton.textContent = 'Save status & feedback';
+
+          saveButton.addEventListener('click', async () => {
+            saveButton.disabled = true;
+            saveButton.textContent = 'Saving…';
+
+            try {
+              const { error } = await client.rpc(
+                'technician_update_assigned_request',
+                {
+                  p_request_id: job.id,
+                  p_status: status.value,
+                  p_feedback: feedback.value
+                }
+              );
+
+              if (error) throw error;
+
+              notice(
+                'Job update saved. The administrator can now review your feedback.',
+                'success'
+              );
+
+              await loadJobs();
+            } catch (error) {
+              notice(
+                `Update was not saved: ${error.message || 'Check the technician setup.'}`,
+                'error'
+              );
+              saveButton.disabled = false;
+              saveButton.textContent = 'Save status & feedback';
+            }
+          });
+
+          actions.appendChild(saveButton);
+          card.appendChild(actions);
+          $('jobs').appendChild(card);
+        }
+      } catch (error) {
+        notice(
+          `Could not load assigned jobs: ${error.message || 'Unknown database error'}`,
+          'error'
+        );
+
+        $('jobs').appendChild(
+          makeText(
+            'div',
+            'Jobs could not be loaded. Confirm the technician portal SQL has been run and a job is assigned to you.',
+            'empty'
+          )
+        );
+      } finally {
+        $('refreshButton').disabled = false;
+        $('refreshButton').textContent = 'Refresh jobs';
+      }
+    }
+
+    async function openPortal() {
+      hideViews();
+
+      if (
+        typeof SUPABASE_URL === 'undefined' ||
+        typeof SUPABASE_PUBLISHABLE_KEY === 'undefined'
+      ) {
+        showError(
+          'Supabase configuration was not found. Keep supabase-config.js in the same folder as this file.'
+        );
+        return;
+      }
+
+      if (!window.supabase?.createClient) {
+        showError(
+          'Supabase could not load. Check your internet connection and reload this page.'
+        );
+        return;
+      }
+
+      if (!client) {
+        client = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_PUBLISHABLE_KEY
+        );
+      }
+
+      const { data, error } = await client.auth.getSession();
+
+      if (error) {
+        showError(`Could not check your sign-in: ${error.message}`);
+        return;
+      }
+
+      user = data.session?.user;
+
+      if (!user) {
+        showLogin();
+        return;
+      }
+
+      $('userEmail').textContent = user.email || 'Signed in';
+      $('userEmail').hidden = false;
+      $('logoutButton').hidden = false;
+
+      const { data: row, error: technicianError } = await client
+        .from('technicians')
+        .select('id,full_name,phone,service_area,is_active,auth_user_id')
+        .eq('auth_user_id', user.id)
+        .maybeSingle();
+
+      if (technicianError) {
+        showError(
+          `Could not verify technician account: ${technicianError.message}. Check the technician portal SQL and permissions.`
+        );
+        return;
+      }
+
+      if (!row || !row.is_active) {
+        hideViews();
+        $('accessCard').hidden = false;
+        $('accessMessage').textContent =
+          `The signed-in account (${user.email || 'unknown email'}) is not linked to an active technician record. If this is your administrator account, switch accounts below and sign in with the technician's own email.`;
+        $('userEmail').hidden = false;
+        $('logoutButton').hidden = false;
+        return;
+      }
+
+      technician = row;
+      hideViews();
+      $('dashboard').hidden = false;
+      $('techDetails').textContent =
+        `Signed in as ${row.full_name} · Service area: ${row.service_area || 'Not specified'}`;
+
+      await loadJobs();
+    }
+
+    $('loginForm').addEventListener('submit', async event => {
+      event.preventDefault();
+
+      const email = $('email').value.trim();
+      const password = $('password').value;
+      const button = $('loginButton');
+
+      button.disabled = true;
+      button.textContent = 'Signing in…';
+
+      try {
+        if (!client) {
+          if (
+            typeof SUPABASE_URL === 'undefined' ||
+            typeof SUPABASE_PUBLISHABLE_KEY === 'undefined'
+          ) {
+            throw new Error('Supabase configuration is missing.');
+          }
+
+          client = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+          );
+        }
+
+        const { error } = await client.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) throw error;
+
+        $('password').value = '';
+        await openPortal();
+      } catch (error) {
+        showLogin();
+        showNotice(
+          'loginNotice',
+          `Sign-in failed: ${error.message || 'Check your email and password.'}`,
+          'error'
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Sign in to technician portal';
+      }
+    });
+
+    $('logoutButton').addEventListener('click', async () => {
+      await signOutAndShowLogin('You have signed out. Sign in with your technician account.');
+    });
+
+    $('switchAccountButton').addEventListener('click', async () => {
+      await signOutAndShowLogin('Please sign in using the technician account, not the administrator account.');
+    });
+
+    $('errorBackButton').addEventListener('click', async () => {
+      await signOutAndShowLogin();
+    });
+
+    $('refreshButton').addEventListener('click', loadJobs);
+
+    document.addEventListener('DOMContentLoaded', openPortal);
+  })();
+  </script>
+</body>
+</html>

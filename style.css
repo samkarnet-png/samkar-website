@@ -1,0 +1,1468 @@
+/* ==================================================
+   1. GENERAL SETTINGS
+================================================== */
+
+* {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+html {
+    scroll-padding-top: 90px;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #061b38;
+    background: #ffffff;
+    line-height: 1.6;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    font: inherit;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.section {
+    padding: 100px 0;
+}
+
+/* ==================================================
+   2. HEADER
+================================================== */
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #061b38;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+}
+
+.nav-container {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.logo-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-brand > span {
+    color: #ffffff;
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.logo small {
+    color: #f5c400;
+    font-size: 11px;
+    margin-top: 6px;
+    margin-left: 44px;
+    letter-spacing: 1.5px;
+}
+
+/* WIFI LOGO */
+
+.logo .wifi-logo {
+    width: 34px;
+    height: 30px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.logo .wifi-arc {
+    position: absolute;
+    border: 3px solid #f5c400;
+    border-bottom: 0;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logo .arc-one {
+    width: 34px;
+    height: 20px;
+    top: 0;
+}
+
+.logo .arc-two {
+    width: 24px;
+    height: 14px;
+    top: 7px;
+}
+
+.logo .arc-three {
+    width: 14px;
+    height: 8px;
+    top: 14px;
+}
+
+.logo .wifi-dot {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #f5c400;
+    border-radius: 50%;
+    left: 50%;
+    bottom: 1px;
+    transform: translateX(-50%);
+}
+
+/* NAVIGATION */
+
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar a {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.3s ease;
+    position: relative;
+    white-space: nowrap;
+}
+
+.navbar a:not(.header-login)::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 0;
+    height: 2px;
+    background: #f5c400;
+    transition: 0.3s ease;
+}
+
+.navbar a:hover,
+.navbar a.active {
+    color: #f5c400;
+}
+
+.navbar a:not(.header-login):hover::after,
+.navbar a:not(.header-login).active::after {
+    width: 100%;
+}
+
+/* SMALL HEADER LOGIN BUTTON */
+
+.navbar .header-login {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 15px;
+    border: 1px solid #f5c400;
+    border-radius: 4px;
+    background: #f5c400;
+    color: #061b38;
+    font-size: 13px;
+    font-weight: 800;
+    transition: 0.25s ease;
+}
+
+.navbar .header-login:hover {
+    background: transparent;
+    color: #f5c400;
+    transform: translateY(-2px);
+}
+
+.login-symbol {
+    font-size: 16px;
+    font-weight: 900;
+}
+
+/* ==================================================
+   3. HERO
+================================================== */
+
+.hero {
+    min-height: calc(100vh - 80px);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-image: url("technician.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    text-align: left;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 18, 38, 0.68);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    color: #ffffff;
+    text-align: left;
+    padding-top: 65px;
+    padding-bottom: 65px;
+}
+
+.hero-tagline {
+    margin: 0 0 18px;
+    color: #f5c400;
+    font-size: clamp(17px, 2vw, 23px);
+    font-weight: 700;
+    letter-spacing: 4px;
+}
+
+.hero-content h1 {
+    margin: 0 0 15px;
+    color: #ffffff;
+    font-size: clamp(38px, 5vw, 62px);
+    font-weight: 800;
+    letter-spacing: 2px;
+    line-height: 1.1;
+}
+
+.hero-content h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(25px, 3vw, 40px);
+    font-weight: 600;
+}
+
+/* ==================================================
+   4. MAIN HERO LOGIN PANEL
+================================================== */
+
+.hero-login {
+    width: 100%;
+    max-width: 470px;
+    margin: 38px auto 0;
+    padding: 28px 32px;
+    text-align: center;
+    background: rgba(6, 27, 56, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-top: 4px solid #f5c400;
+    border-radius: 8px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(8px);
+}
+
+.hero-login-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    background: #f5c400;
+    color: #061b38;
+    font-size: 27px;
+    font-weight: 800;
+}
+
+.hero-login-label {
+    margin: 0 0 8px;
+    color: #f5c400;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+}
+
+.hero-login h3 {
+    margin: 0 0 10px;
+    color: #ffffff;
+    font-size: 23px;
+    line-height: 1.3;
+}
+
+.hero-login-description {
+    margin: 0 0 22px;
+    color: #dce8f5;
+    font-size: 14px;
+}
+
+.hero-login-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #f5c400;
+    border-radius: 4px;
+    background: #f5c400;
+    color: #061b38;
+    font-size: 15px;
+    font-weight: 800;
+    transition: 0.25s ease;
+}
+
+.hero-login-button:hover {
+    background: transparent;
+    color: #f5c400;
+    transform: translateY(-2px);
+}
+
+.hero-login-arrow {
+    font-size: 23px;
+    line-height: 1;
+}
+
+.hero-login-note {
+    margin: 15px 0 0;
+    color: #cbd6e2;
+    font-size: 11px;
+}
+
+/* ==================================================
+   5. SECTION HEADINGS
+================================================== */
+
+.section-heading {
+    margin-bottom: 55px;
+}
+
+.section-heading.center {
+    text-align: center;
+}
+
+.section-label {
+    margin: 0 0 8px;
+    color: #d4a900;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: clamp(34px, 5vw, 50px);
+    line-height: 1.2;
+    color: #061b38;
+}
+
+.section-heading h2 span {
+    color: #d4a900;
+}
+
+.section-intro {
+    max-width: 650px;
+    margin: 15px auto 0;
+    color: #667085;
+}
+
+/* ==================================================
+   6. ABOUT
+================================================== */
+
+.about-section {
+    background: #ffffff;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.about-text h3 {
+    font-size: 28px;
+    margin: 0 0 20px;
+    color: #061b38;
+}
+
+.about-text p {
+    color: #5e6b7b;
+    margin-bottom: 18px;
+}
+
+.about-box {
+    background: #061b38;
+    color: #ffffff;
+    padding: 45px;
+    border-left: 5px solid #f5c400;
+    box-shadow: 0 15px 40px rgba(6, 27, 56, 0.15);
+}
+
+.about-icon {
+    color: #f5c400;
+    font-size: 35px;
+    margin-bottom: 15px;
+}
+
+.about-box h3 {
+    margin: 0 0 15px;
+    font-size: 26px;
+}
+
+.about-box p {
+    color: #d9e2ed;
+    margin: 0;
+}
+
+/* ==================================================
+   7. SERVICES
+================================================== */
+
+.services-section {
+    background: #f5f8fb;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.service-card {
+    background: #ffffff;
+    padding: 35px 30px;
+    border: 1px solid #e4e9ef;
+    transition: 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-7px);
+    border-color: #f5c400;
+    box-shadow: 0 15px 35px rgba(6, 27, 56, 0.1);
+}
+
+.service-icon {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #061b38;
+    color: #f5c400;
+    font-size: 25px;
+    margin-bottom: 22px;
+}
+
+.service-card h3 {
+    margin: 0 0 12px;
+    font-size: 21px;
+}
+
+.service-card p {
+    margin: 0;
+    color: #687585;
+}
+
+/* ==================================================
+   8. LOCATIONS AND PACKAGES
+================================================== */
+
+.locations-section {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0757a5 0%, #061b38 100%);
+}
+
+.locations-section::before {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    border: 55px solid rgba(245, 196, 0, 0.08);
+    border-radius: 50%;
+    top: -160px;
+    right: -100px;
+    pointer-events: none;
+}
+
+.locations-section::after {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border: 35px solid rgba(255, 255, 255, 0.04);
+    border-radius: 50%;
+    bottom: -130px;
+    left: -80px;
+    pointer-events: none;
+}
+
+.locations-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.locations-section .section-label {
+    color: #f5c400;
+}
+
+.locations-section .section-heading h2 {
+    color: #ffffff;
+    letter-spacing: 1px;
+}
+
+.locations-section .section-heading h2 span {
+    color: #f5c400;
+}
+
+.locations-section .section-intro {
+    color: #dce8f5;
+}
+
+/* LOCATION SELECTOR */
+
+.location-selector {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: -10px 0 45px;
+}
+
+.location-button {
+    min-width: 145px;
+    padding: 14px 25px;
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.location-button:hover {
+    border-color: #f5c400;
+    transform: translateY(-2px);
+}
+
+.location-button.active {
+    background: #f5c400;
+    border-color: #f5c400;
+    color: #061b38;
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.15);
+}
+
+.location-button:focus-visible,
+.package-button:focus-visible,
+.hero-login-button:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 4px;
+}
+
+/* SELECTED LOCATION */
+
+.location-heading {
+    text-align: center;
+    margin: 0 0 30px;
+    color: #ffffff;
+}
+
+.location-heading h3 {
+    display: inline-block;
+    margin: 0;
+    font-size: clamp(24px, 3vw, 32px);
+}
+
+.location-marker {
+    display: inline-block;
+    margin-right: 8px;
+    color: #f5c400;
+    font-size: 18px;
+}
+
+.location-heading p {
+    margin: 6px 0 0;
+    color: #dce8f5;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+/* PACKAGE CARDS */
+
+.packages-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 25px;
+    align-items: stretch;
+}
+
+.package-card {
+    position: relative;
+    overflow: hidden;
+    padding: 32px 22px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: packageAppear 0.35s ease both;
+}
+
+.package-card::before {
+    content: "";
+    position: absolute;
+    height: 7px;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #f5c400;
+}
+
+.package-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.package-speed {
+    margin: 0 0 20px;
+    color: #0757a5;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.package-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 17px 10px;
+    background: #f1f7fc;
+    border-left: 4px solid #f5c400;
+}
+
+.package-price span {
+    color: #0757a5;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.package-price strong {
+    color: #061b38;
+    font-size: clamp(27px, 3vw, 36px);
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.package-description {
+    margin: 20px 0;
+    color: #687585;
+    font-size: 14px;
+}
+
+.package-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 13px 18px;
+    background: #0757a5;
+    color: #ffffff;
+    border: 2px solid #0757a5;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.3s ease;
+}
+
+.package-button:hover {
+    background: #f5c400;
+    border-color: #f5c400;
+    color: #061b38;
+}
+
+.package-note {
+    margin: 30px 0 0;
+    color: #dce8f5;
+    text-align: center;
+    font-size: 13px;
+}
+
+@keyframes packageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==================================================
+   9. WHY CHOOSE US
+================================================== */
+
+.why-section {
+    background: #ffffff;
+}
+
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+.why-card {
+    padding: 30px;
+    border-top: 3px solid #061b38;
+    background: #f7f9fb;
+}
+
+.why-number {
+    color: #d4a900;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.why-card h3 {
+    margin: 0 0 12px;
+    font-size: 19px;
+}
+
+.why-card p {
+    color: #687585;
+    margin: 0;
+}
+
+/* ==================================================
+   10. PROJECTS
+================================================== */
+
+.projects-section {
+    background: #f5f8fb;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.project-card {
+    height: 280px;
+    overflow: hidden;
+    background: #061b38;
+    border-radius: 3px;
+    box-shadow: 0 8px 25px rgba(6, 27, 56, 0.1);
+}
+
+.project-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.project-card:hover img {
+    transform: scale(1.06);
+}
+
+/* ==================================================
+   11. CONTACT
+================================================== */
+
+.contact-section {
+    background: #061b38;
+    color: #ffffff;
+}
+
+.contact-section .section-heading h2 {
+    color: #ffffff;
+}
+
+.contact-section .section-intro {
+    color: #cbd6e2;
+}
+
+.contact-section .section-label {
+    color: #f5c400;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    max-width: 1050px;
+    margin: auto;
+}
+
+.contact-card {
+    background: #102946;
+    padding: 35px 25px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    border-color: #f5c400;
+}
+
+.contact-icon {
+    width: 55px;
+    height: 55px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5c400;
+    color: #061b38;
+    font-size: 25px;
+    border-radius: 50%;
+}
+
+.contact-card h3 {
+    margin: 0 0 10px;
+    font-size: 19px;
+}
+
+.contact-value {
+    display: block;
+    color: #f5c400;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    word-break: break-word;
+}
+
+.contact-value:hover {
+    color: #ffffff;
+}
+
+.email-value {
+    font-size: 15px;
+}
+
+.contact-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.contact-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 95px;
+    padding: 10px 15px;
+    background: #ffffff;
+    color: #061b38;
+    border-radius: 3px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: 0.3s ease;
+}
+
+.contact-btn:hover {
+    background: #f5c400;
+    color: #061b38;
+    transform: translateY(-2px);
+}
+
+.whatsapp-btn {
+    background: #f5c400;
+}
+
+.email-btn {
+    min-width: 130px;
+}
+
+/* ==================================================
+   12. FOOTER
+================================================== */
+
+.footer {
+    background: #031226;
+    color: #ffffff;
+    padding: 35px 0;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+.footer-brand h3 {
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: 2px;
+    font-size: 22px;
+}
+
+.footer-brand p {
+    margin: 5px 0 0;
+    color: #f5c400;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.footer-info {
+    text-align: right;
+}
+
+.footer-info p {
+    margin: 4px 0;
+    color: #aebdce;
+    font-size: 13px;
+}
+
+/* ==================================================
+   13. TABLET
+================================================== */
+
+@media (max-width: 1100px) {
+    .nav-container {
+        gap: 18px;
+    }
+
+    .navbar {
+        gap: 12px;
+    }
+
+    .navbar a {
+        font-size: 12px;
+    }
+
+    .navbar .header-login {
+        padding: 8px 11px;
+    }
+}
+
+@media (max-width: 900px) {
+    .nav-container {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px 0;
+    }
+
+    .navbar {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 15px;
+    }
+
+    .navbar a {
+        font-size: 13px;
+    }
+
+    .about-content {
+        grid-template-columns: 1fr;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .packages-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .why-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+    }
+}
+
+/* ==================================================
+   14. MOBILE
+================================================== */
+
+@media (max-width: 700px) {
+    .section {
+        padding: 75px 0;
+    }
+
+    .nav-container {
+        min-height: auto;
+        gap: 18px;
+    }
+
+    .navbar {
+        justify-content: flex-start;
+        gap: 14px;
+    }
+
+    .navbar a {
+        font-size: 12px;
+    }
+
+    .navbar .header-login {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .hero {
+        min-height: auto;
+    }
+
+    .hero-content {
+        width: 90%;
+        padding-top: 65px;
+        padding-bottom: 65px;
+        text-align: left;
+    }
+
+    .hero-content h1 {
+        font-size: 34px;
+        line-height: 1.2;
+    }
+
+    .hero-tagline {
+        font-size: 14px;
+        letter-spacing: 2px;
+    }
+
+    .hero-content h2 {
+        font-size: 25px;
+    }
+
+    .hero-login {
+        margin-top: 32px;
+        padding: 26px 22px;
+    }
+
+    .hero-login h3 {
+        font-size: 21px;
+    }
+
+    .services-grid,
+    .why-grid,
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .location-selector {
+        gap: 10px;
+        margin-bottom: 35px;
+    }
+
+    .location-button {
+        min-width: 0;
+        flex: 1 1 130px;
+        padding: 13px 12px;
+        font-size: 14px;
+    }
+
+    .packages-grid {
+        grid-template-columns: 1fr;
+        max-width: 430px;
+        margin: auto;
+    }
+
+    .package-card {
+        padding: 30px 24px;
+    }
+
+    .package-price strong {
+        font-size: 36px;
+    }
+
+    .project-card {
+        height: 260px;
+    }
+
+    .about-box {
+        padding: 30px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-info {
+        text-align: center;
+    }
+}
+
+/* ==================================================
+   15. SMALL PHONES
+================================================== */
+
+@media (max-width: 420px) {
+    .container {
+        width: 92%;
+    }
+
+    .logo-brand > span {
+        font-size: 24px;
+    }
+
+    .logo small {
+        margin-left: 40px;
+    }
+
+    .navbar {
+        gap: 10px;
+    }
+
+    .navbar a {
+        font-size: 11px;
+    }
+
+    .hero-content h1 {
+        font-size: 28px;
+    }
+
+    .hero-tagline {
+        font-size: 12px;
+        letter-spacing: 1.5px;
+    }
+
+    .hero-content h2 {
+        font-size: 23px;
+    }
+
+    .hero-login {
+        padding: 24px 18px;
+    }
+
+    .hero-login h3 {
+        font-size: 19px;
+    }
+
+    .section-heading h2 {
+        font-size: 34px;
+    }
+
+    .location-heading h3 {
+        font-size: 24px;
+    }
+
+    .package-speed {
+        font-size: 23px;
+    }
+
+    .contact-card {
+        padding: 30px 18px;
+    }
+}
+
+/* ==================================================
+   16. SAMKAR LIVE COVERAGE MAP
+================================================== */
+
+.coverage-map-section {
+    background: #f1f7fc;
+    padding: 80px 0;
+}
+
+.coverage-map-section .section-heading {
+    margin-bottom: 28px;
+}
+
+.coverage-map-description {
+    max-width: 760px;
+    margin: 0 auto 25px;
+    color: #52657b;
+    text-align: center;
+    line-height: 1.8;
+}
+
+.coverage-map-panel {
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #e1eaf4;
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(6, 27, 56, 0.09);
+}
+
+.coverage-location-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.coverage-location-button {
+    padding: 11px 20px;
+    background: #ffffff;
+    color: #061b38;
+    border: 1px solid #0757a5;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.coverage-location-button:hover {
+    background: #e8f2fc;
+    transform: translateY(-1px);
+}
+
+.coverage-location-button.active {
+    background: #0757a5;
+    color: #ffffff;
+}
+
+.coverage-location-button:focus-visible {
+    outline: 3px solid #ffc400;
+    outline-offset: 3px;
+}
+
+.coverage-map-title {
+    margin: 0 0 5px;
+    color: #061b38;
+    text-align: center;
+    font-size: 24px;
+}
+
+.coverage-map-subtitle {
+    margin: 0 0 20px;
+    color: #52657b;
+    text-align: center;
+    font-size: 14px;
+}
+
+.coverage-map-frame {
+    width: 100%;
+    height: 460px;
+    border: 1px solid #dce6f0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #e8eef5;
+}
+
+/* Leaflet map container: matches index.html */
+#samkar-coverage-map {
+    width: 100%;
+    height: 460px;
+    min-height: 320px;
+    border-radius: 12px;
+    background: #e8eef5;
+    z-index: 1;
+}
+
+#samkar-coverage-map .leaflet-control-container {
+    z-index: 500;
+}
+
+#samkar-coverage-map .leaflet-control-zoom a {
+    color: #061b38;
+}
+
+#samkar-coverage-map .leaflet-control-attribution {
+    font-size: 10px;
+}
+
+/* Map feature popups */
+.samkar-map-popup h3 {
+    margin: 0 0 6px;
+    color: #061b38;
+    font-size: 15px;
+}
+
+.samkar-map-popup p {
+    margin: 4px 0;
+    color: #52657b;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Published equipment/access point marker */
+.samkar-access-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    background: #d62828;
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(6, 27, 56, 0.35);
+    font-size: 17px;
+    font-weight: 800;
+}
+
+/* Map legend */
+.coverage-map-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 0 0;
+    color: #37465a;
+    font-size: 13px;
+}
+
+.coverage-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.coverage-legend-marker {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    background: #d62828;
+    box-shadow: 0 0 0 1px #d62828;
+}
+
+.coverage-legend-area {
+    display: inline-block;
+    width: 20px;
+    height: 14px;
+    border: 2px solid #d4a900;
+    border-radius: 3px;
+    background: rgba(255, 196, 0, 0.35);
+}
+
+/* Map data status and messages */
+.coverage-map-status {
+    margin: 16px 0 0;
+    padding: 12px 15px;
+    border-radius: 6px;
+    background: #f1f7fc;
+    color: #52657b;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.coverage-map-status.error {
+    background: #fff0f0;
+    color: #9b1c1c;
+}
+
+.coverage-map-status.success {
+    background: #eefaf1;
+    color: #176534;
+}
+
+.coverage-map-note {
+    margin: 20px 0 0;
+    padding: 15px 17px;
+    border-left: 4px solid #ffc400;
+    border-radius: 5px;
+    background: #fff9df;
+    color: #37465a;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.coverage-map-open {
+    display: inline-block;
+    margin-top: 16px;
+    color: #0757a5;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.coverage-map-open:hover {
+    text-decoration: underline;
+}
+
+/* Responsive map layout */
+@media (max-width: 700px) {
+    .coverage-map-section {
+        padding: 60px 0;
+    }
+
+    .coverage-map-panel {
+        padding: 14px;
+        border-radius: 12px;
+    }
+
+    #samkar-coverage-map {
+        height: 360px;
+        min-height: 300px;
+    }
+
+    .coverage-map-title {
+        font-size: 20px;
+    }
+
+    .coverage-location-buttons {
+        gap: 8px;
+    }
+
+    .coverage-location-button {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .coverage-map-legend {
+        gap: 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 420px) {
+    #samkar-coverage-map {
+        height: 320px;
+        min-height: 280px;
+    }
+
+    .coverage-map-panel {
+        padding: 10px;
+    }
+
+    .coverage-map-note {
+        padding: 12px;
+        font-size: 12px;
+    }
+}

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#061b38">
+  <title>Admin Dashboard | SAMKAR Network Solutions</title>
+  <style>
+    :root{--navy:#061b38;--blue:#0757a5;--yellow:#ffc400;--light:#f1f7fc;--white:#fff;--text:#25344a;--muted:#64748b;--border:#e1e8f0;--green:#16834a;--red:#c62828}
+    *{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:var(--light);color:var(--text);line-height:1.55}button,select{font:inherit}button{cursor:pointer}[hidden]{display:none!important}
+    .topbar{background:var(--navy);color:#fff;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.brand{font-size:1.25rem;font-weight:800;letter-spacing:.7px}.brand span{color:var(--yellow)}.topbar-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.email{color:#dce8f6;font-size:.9rem;overflow-wrap:anywhere}.button{border:0;border-radius:8px;padding:10px 15px;font-weight:700}.button-primary{background:var(--yellow);color:var(--navy)}.button-secondary{background:#e8f1fb;color:var(--navy)}.button-danger{background:#fee2e2;color:#991b1b}.container{width:min(1320px,92%);margin:30px auto}.hero{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;border-radius:16px;padding:28px;margin-bottom:22px}.hero h1{font-size:clamp(1.6rem,4vw,2.3rem);margin-bottom:5px}.hero p{color:#e0eaf5}.notice{padding:12px 14px;border-radius:9px;margin:14px 0;display:none;overflow-wrap:anywhere}.notice.show{display:block}.notice.success{background:#dcfce7;color:#166534}.notice.error{background:#fee2e2;color:#991b1b}.notice.info{background:#dbeafe;color:#1e40af}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}.overview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 22px}.overview-card{background:#fff;border:1px solid var(--border);border-radius:13px;padding:18px;box-shadow:0 4px 16px #061b3808;min-width:0}.overview-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.overview-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;background:#e8f1fb;color:var(--blue);font-size:1.2rem;font-weight:800}.overview-label{color:var(--muted);font-size:.88rem;margin-top:12px}.overview-value{font-size:clamp(1.35rem,2.5vw,1.9rem);font-weight:800;color:var(--navy);overflow-wrap:anywhere;line-height:1.25;margin-top:3px}.overview-note{font-size:.78rem;color:var(--muted);margin-top:5px}.overview-action{display:inline-block;margin-top:12px;border:0;border-radius:7px;padding:8px 10px;background:#e8f1fb;color:var(--navy);font-weight:700;text-decoration:none;font-size:.84rem}.overview-action:hover{background:#d7e8fa}.account-editor{display:grid;grid-template-columns:minmax(150px,1fr) auto;gap:7px;align-items:center;margin:7px 0;min-width:260px}.account-editor input{width:100%;min-width:0;border:1px solid var(--border);border-radius:7px;padding:8px;font:inherit}.account-item{padding:8px 0;border-bottom:1px solid var(--border)}.account-item:last-child{border-bottom:0}.account-item-title{font-size:.82rem;color:var(--muted);margin-bottom:5px}.account-empty{font-size:.84rem;color:var(--muted)}.overview-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.overview-head h2{font-size:1.2rem;color:var(--navy)}.stat,.panel{background:#fff;border:1px solid var(--border);border-radius:13px;padding:18px;box-shadow:0 4px 16px #061b3808}.stat-button{appearance:none;-webkit-appearance:none;display:block;width:100%;min-height:112px;text-align:left;color:inherit;font:inherit;background:#fff;border:2px solid var(--border);border-radius:13px;padding:18px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}.stat-button:hover{border-color:var(--blue);transform:translateY(-1px)}.stat-button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}.stat-button.active{border:3px solid var(--blue);box-shadow:0 0 0 4px #0757a533;background:#eaf3ff}.stat-button.active .stat-label{color:var(--blue);font-weight:800}.stat-button.active .subtext{color:var(--blue);font-weight:700}.stat-label{color:var(--muted);font-size:.9rem}.stat-value{font-size:1.8rem;font-weight:800;color:var(--navy);margin-top:4px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px}.panel h2{font-size:1.2rem;color:var(--navy)}.filters{display:flex;gap:9px;flex-wrap:wrap}.filters select{border:1px solid var(--border);background:#fff;border-radius:8px;padding:9px;max-width:100%}.table-wrap{overflow-x:auto}.table-scroll{max-height:320px;overflow:auto;overscroll-behavior:contain;border:1px solid var(--border);border-radius:9px;scrollbar-gutter:stable}.table-scroll table{margin:0}.table-scroll thead th{position:sticky;top:0;z-index:2;box-shadow:0 1px 0 var(--border)}.table-scroll tbody tr:last-child td{border-bottom:0}.requests{width:100%;border-collapse:collapse;min-width:900px}.requests th,.requests td{text-align:left;padding:13px 12px;border-bottom:1px solid var(--border);vertical-align:top}.requests th{font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:#f8fafc}.requests td{font-size:.92rem}.customer-name{font-weight:700;color:var(--navy)}.subtext{font-size:.82rem;color:var(--muted);overflow-wrap:anywhere}.details{max-width:260px;white-space:pre-wrap;overflow-wrap:anywhere}.status{display:inline-block;padding:4px 9px;border-radius:999px;background:#fef3c7;color:#92400e;font-size:.78rem;font-weight:800;text-transform:capitalize}.status.approved{background:#dbeafe;color:#1d4ed8}.status.in_progress{background:#ede9fe;color:#6d28d9}.status.completed{background:#dcfce7;color:#166534}.status.rejected{background:#fee2e2;color:#991b1b}.status-select{border:1px solid var(--border);border-radius:7px;padding:7px;background:#fff;max-width:150px}.empty{padding:28px;text-align:center;color:var(--muted)}.customer-tools{display:flex;gap:9px;flex-wrap:wrap}.customer-tools input{border:1px solid var(--border);background:#fff;border-radius:8px;padding:9px;min-width:240px;max-width:100%;font:inherit}.customer-table{width:100%;border-collapse:collapse;min-width:1000px}.customer-table th,.customer-table td{text-align:left;padding:13px 12px;border-bottom:1px solid var(--border);vertical-align:top}.customer-table th{font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:#f8fafc}.customer-count{color:var(--muted);font-size:.9rem;margin:-5px 0 12px}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:12px 0}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:.9rem;font-weight:700;color:var(--navy)}.field input,.field select{border:1px solid var(--border);border-radius:8px;padding:10px;background:#fff;min-width:0}.assignment-controls{display:grid;gap:7px;min-width:190px}.assignment-controls input,.assignment-controls select{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px;background:#fff}.technician-table{width:100%;border-collapse:collapse;min-width:600px}.technician-table th,.technician-table td{text-align:left;padding:12px;border-bottom:1px solid var(--border);vertical-align:top}.technician-table th{font-size:.82rem;text-transform:uppercase;color:var(--muted);background:#f8fafc}.small-button{border:0;border-radius:7px;padding:7px 10px;font-weight:700;background:#e8f1fb;color:var(--navy)}.small-button:disabled{opacity:.6;cursor:not-allowed}#registeredCustomers,#technicianManagement,#serviceRequests,#billingPanel{scroll-margin-top:18px}.footer{text-align:center;color:var(--muted);font-size:.85rem;padding:24px 0}.access-card{max-width:650px;margin:60px auto;background:#fff;border:1px solid var(--border);border-radius:15px;padding:28px}.access-card h1{color:var(--navy);margin-bottom:8px}.access-card p{margin:10px 0;color:var(--muted)}
+    @media(max-width:800px){.stats,.overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.container{margin:20px auto}.hero{padding:22px}}@media(max-width:420px){.stats,.overview-grid{grid-template-columns:1fr 1fr}.stat{padding:13px}.overview-card{padding:13px}.stat-value{font-size:1.5rem}.topbar{padding:14px 4%}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span>◆</span> SAMKAR <span>ADMIN</span></div>
+    <div class="topbar-right"><span class="email" id="adminEmail">Checking account...</span><button class="button button-primary" id="logoutButton" type="button">Sign out</button></div>
+  </header>
+
+  <main class="container" id="adminContent" hidden>
+    <section class="hero"><h1>Administrator Dashboard</h1><p>Review customer requests and update their progress. Changes are reflected in the customer portal.</p></section>
+    <div id="message" class="notice" role="status" aria-live="polite"></div>
+    <section class="panel" style="margin-bottom:22px" aria-labelledby="overviewHeading">
+      <div class="overview-head">
+        <div><h2 id="overviewHeading">Business overview</h2><p class="subtext">Live figures from your SAMKAR records. Revenue counts confirmed payment submissions only.</p></div>
+        <button class="button button-secondary" id="refreshOverviewButton" type="button">Refresh overview</button>
+      </div>
+      <div class="overview-grid" aria-live="polite">
+        <article class="overview-card"><div class="overview-top"><span class="overview-icon" aria-hidden="true">♙</span></div><div class="overview-label">Registered customers</div><div class="overview-value" id="overviewCustomers">—</div><div class="overview-note">Customer profiles</div><a class="overview-action" href="#registeredCustomers">View customers</a></article>
+        <article class="overview-card"><div class="overview-top"><span class="overview-icon" aria-hidden="true">⌁</span></div><div class="overview-label">Active subscriptions</div><div class="overview-value" id="overviewActiveSubs">—</div><div class="overview-note">Active customer accounts</div><a class="overview-action" href="admin-billing.html#activeSubscriptions">Open subscriptions</a></article>
+        <article class="overview-card"><div class="overview-top"><span class="overview-icon" aria-hidden="true">!</span></div><div class="overview-label">Suspended subscriptions</div><div class="overview-value" id="overviewSuspendedSubs">—</div><div class="overview-note">Accounts needing review</div><a class="overview-action" href="admin-billing.html#suspendedSubscriptions">Review accounts</a></article>
+        <article class="overview-card"><div class="overview-top"><span class="overview-icon" aria-hidden="true">KSh</span></div><div class="overview-label">Expected monthly value</div><div class="overview-value" id="overviewExpected">—</div><div class="overview-note">Active monthly plans minus confirmed payments</div><a class="overview-action" href="admin-billing.html#expectedMonthlyValue">View active plans</a></article>
+        <article class="overview-card"><div class="overview-top"><span class="overview-icon" aria-hidden="true">▤</span></div><div class="overview-label">Unpaid invoices</div><div class="overview-value" id="overviewUnpaidCount">—</div><div class="overview-note" id="overviewUnpaidAmount">Outstanding balance: —</div><a class="overview-action" href="admin-billing.html#invoices">Review unpaid invoices</a></article>
+        <article class="overview-card"><div class="overview-top"><span class="overview-icon" aria-hidden="true">✓</span></div><div class="overview-label">Confirmed payments</div><div class="overview-value" id="overviewConfirmed">—</div><div class="overview-note">Total confirmed payment records</div><a class="overview-action" href="admin-billing.html#confirmedPayments">View confirmed payments</a></article>
+        <article class="overview-card"><div class="overview-top"><span class="overview-icon" aria-hidden="true">⚒</span></div><div class="overview-label">Active technicians</div><div class="overview-value" id="overviewTechnicians">—</div><div class="overview-note">Available in the staff roster</div><a class="overview-action" href="#technicianManagement">Manage technicians</a></article>
+        <article class="overview-card"><div class="overview-top"><span class="overview-icon" aria-hidden="true">↗</span></div><div class="overview-label">Open service requests</div><div class="overview-value" id="overviewOpenRequests">—</div><div class="overview-note">Not completed or rejected</div><a class="overview-action" href="#serviceRequests">View requests</a></article>
+      </div>
+      <p class="subtext" id="overviewUpdated" style="margin-top:10px">Overview figures have not been loaded yet.</p>
+    </section>
+    <section class="panel" style="margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div><h2>Billing &amp; monthly subscriptions</h2><p class="subtext">Create customer subscriptions, generate monthly invoices, and review payment submissions.</p></div>
+      <a class="button button-primary" href="admin-billing.html" style="text-decoration:none;display:inline-block">Manage Billing</a>
+    </section>
+    <section class="stats" aria-label="Filter service requests">
+      <button class="stat stat-button active" type="button" data-status="all" aria-pressed="true"><div class="stat-label">All requests</div><div class="stat-value" id="countAll">—</div><div class="subtext">Show every request</div></button>
+      <button class="stat stat-button" type="button" data-status="pending" aria-pressed="false"><div class="stat-label">Pending</div><div class="stat-value" id="countPending">—</div><div class="subtext">Awaiting action</div></button>
+      <button class="stat stat-button" type="button" data-status="in_progress" aria-pressed="false"><div class="stat-label">In progress</div><div class="stat-value" id="countProgress">—</div><div class="subtext">Work underway</div></button>
+      <button class="stat stat-button" type="button" data-status="completed" aria-pressed="false"><div class="stat-label">Completed</div><div class="stat-value" id="countCompleted">—</div><div class="subtext">Finished requests</div></button>
+    </section>
+    <section class="panel" id="registeredCustomers" style="margin-bottom:22px">
+      <div class="panel-head">
+        <div><h2>Registered customers</h2><p class="subtext">Customer profiles saved in SAMKAR. Assign an account number to each existing subscription here; one customer may have multiple subscriptions and account numbers.</p></div>
+        <div class="customer-tools"><input id="customerSearch" type="search" placeholder="Search name, phone or location" aria-label="Search customers"><button class="button button-secondary" id="refreshCustomersButton" type="button">Refresh customers</button></div>
+      </div>
+      <p class="customer-count" id="customerCount" role="status">Loading customers...</p>
+      <div class="table-wrap table-scroll" aria-label="Registered customers list; scroll inside this area to see more customers"><table class="customer-table"><thead><tr><th>Full name</th><th>Phone</th><th>Service location</th><th>Subscription account number(s)</th><th>Profile ID</th></tr></thead><tbody id="customerRows"><tr><td colspan="5" class="empty">Loading customers...</td></tr></tbody></table></div>
+      <p class="subtext" style="margin-top:7px">Tip: scroll inside this list to view more customers; the rest of the dashboard stays in place.</p>
+    </section>
+    <section class="panel" id="technicianManagement" style="margin-bottom:22px">
+      <div class="panel-head"><div><h2>Technician management</h2><p class="subtext">Maintain the staff roster and link each technician to their own Supabase login. Create the login in Supabase Auth first, then paste its User UID below.</p></div><button class="button button-secondary" id="refreshTechniciansButton" type="button">Refresh technicians</button></div>
+      <div id="technicianMessage" class="notice" role="status" aria-live="polite"></div>
+      <form id="technicianForm">
+        <div class="form-grid">
+          <div class="field"><label for="technicianName">Technician full name</label><input id="technicianName" maxlength="120" required placeholder="Full name"></div>
+          <div class="field"><label for="technicianPhone">Phone number</label><input id="technicianPhone" type="tel" maxlength="25" required placeholder="07XXXXXXXX"></div>
+          <div class="field"><label for="technicianArea">Service area</label><select id="technicianArea" required><option value="">Choose area</option><option>Nyahururu</option><option>Maralal</option><option>Ol Kalou</option><option>MA4</option><option>Multiple areas</option></select></div>
+        </div>
+        <button class="button button-primary" id="addTechnicianButton" type="submit">Add Technician</button>
+      </form>
+      <div class="table-wrap table-scroll" style="margin-top:18px" aria-label="Technician roster; scroll inside this area to see more technicians"><table class="technician-table"><thead><tr><th>Technician</th><th>Phone</th><th>Service area</th><th>Login account</th><th>Status</th><th>Action</th></tr></thead><tbody id="technicianRows"><tr><td colspan="6" class="empty">Loading technicians...</td></tr></tbody></table></div>
+      <p class="subtext" style="margin-top:7px">Tip: scroll inside this list to view more technicians; the rest of the dashboard stays in place.</p>
+    </section>
+    <section class="panel" id="serviceRequests">
+      <div class="panel-head"><div><h2>Customer service requests &amp; job assignment</h2><p class="subtext" id="requestFilterLabel">Showing all requests. Click a status card above to filter.</p><p class="subtext">Assign a technician and schedule an installation or support visit. Update request status as work progresses.</p></div><div class="filters"><button class="button button-secondary" id="refreshButton" type="button">Refresh</button></div></div>
+      <div class="table-wrap table-scroll" aria-label="Customer service requests; scroll inside this area to see more requests" style="max-height:420px"><table class="requests" style="min-width:1450px"><thead><tr><th>Customer</th><th>Request</th><th>Location</th><th>Package</th><th>Details</th><th>Submitted</th><th>Status</th><th>Update status</th><th>Technician</th><th>Scheduled visit</th><th>Assignment</th><th>Technician feedback to admin</th></tr></thead><tbody id="requestRows"><tr><td colspan="12" class="empty">Loading requests...</td></tr></tbody></table></div>
+      <p class="subtext" style="margin-top:7px">Tip: scroll inside this request list to view more rows. The table header stays visible while scrolling.</p>
+      <p class="subtext" style="margin-top:12px">Assignment changes are saved to the request. Customers continue to see the request status in their existing portal.</p>
+    </section>
+    <footer class="footer">SAMKAR Network Solutions · Administrator access</footer>
+  </main>
+
+  <section class="access-card" id="accessMessage" hidden><h1>Administrator access required</h1><p>This account is signed in, but it has not been assigned the SAMKAR administrator role. No customer requests have been displayed.</p><p>If this should be your administrator account, assign its user ID in Supabase using the instructions in <strong>samkar-admin-setup.sql</strong>, then refresh this page.</p><button class="button button-secondary" id="backButton" type="button">Return to sign-in</button></section>
+  <section class="access-card" id="errorMessage" hidden><h1>Unable to load the admin dashboard</h1><p id="errorText">Check your Supabase configuration and database policies.</p><button class="button button-secondary" id="retryButton" type="button">Try again</button></section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const statusOptions = [
+        { value: "pending", label: "Pending" },
+        { value: "approved", label: "Approved" },
+        { value: "in_progress", label: "In progress" },
+        { value: "completed", label: "Completed" },
+        { value: "rejected", label: "Rejected" }
+      ];
+      let supabaseClient;
+      let currentUser;
+      let requests = [];
+      let profilesById = new Map();
+      let customers = [];
+      let customerSubscriptions = [];
+      let technicians = [];
+      let activeStatusFilter = "all";
+
+      function showNotice(message, type = "info") {
+        const el = $("message");
+        el.textContent = message;
+        el.className = `notice show ${type}`;
+      }
+      function clearNotice() { $("message").className = "notice"; $("message").textContent = ""; }
+      function showFatal(message) {
+        $("adminContent").hidden = true;
+        $("accessMessage").hidden = true;
+        $("errorMessage").hidden = false;
+        $("errorText").textContent = message;
+      }
+      function formatDate(value) {
+        if (!value) return "—";
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? "—" : date.toLocaleString();
+      }
+      function money(value) {
+        return value === null || value === undefined ? "" : ` · KSh ${Number(value).toLocaleString()}/mo`;
+      }
+      function addCell(row, content, className = "") {
+        const cell = document.createElement("td");
+        if (content instanceof Node) cell.appendChild(content);
+        else cell.textContent = content ?? "—";
+        if (className) cell.className = className;
+        row.appendChild(cell);
+        return cell;
+      }
+      function makeStatusBadge(status) {
+        const badge = document.createElement("span");
+        badge.className = `status ${status || "pending"}`;
+        badge.textContent = (status || "pending").replaceAll("_", " ");
+        return badge;
+      }
+      function updateStats() {
+        $("countAll").textContent = requests.length;
+        $("countPending").textContent = requests.filter(r => r.status === "pending").length;
+        $("countProgress").textContent = requests.filter(r => r.status === "in_progress").length;
+        $("countCompleted").textContent = requests.filter(r => r.status === "completed").length;
+        document.querySelectorAll(".stat-button[data-status]").forEach(button => {
+          const active = button.dataset.status === activeStatusFilter;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+        const labels = { all: "all requests", pending: "pending requests", in_progress: "in-progress requests", completed: "completed requests" };
+        $("requestFilterLabel").textContent = `Showing ${labels[activeStatusFilter] || "all requests"}. Click a status card above to change the filter.`;
+      }
+      function localDateTime(value) {
+        if (!value) return "";
+        const d = new Date(value);
+        if (Number.isNaN(d.getTime())) return "";
+        const pad = n => String(n).padStart(2, "0");
+        return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      }
+      async function sendPasswordRecoveryEmail(email, button) {
+        if (!email || !supabaseClient) {
+          showNotice("The customer's registered email address could not be found.", "error");
+          return;
+        }
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = "Sending...";
+        try {
+          const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+          if (error) throw error;
+          button.textContent = "Recovery email sent";
+          showNotice(`A secure password recovery email has been requested for ${email}. The customer should check their inbox and spam folder.`, "success");
+        } catch (error) {
+          button.disabled = false;
+          button.textContent = originalText;
+          showNotice(`Could not send the recovery email: ${error.message || "Check Supabase Auth email settings and try again."}`, "error");
+        }
+      }
+      function renderRequests() {
+        const tbody = $("requestRows");
+        tbody.replaceChildren();
+        const filter = activeStatusFilter;
+        const visible = requests.filter(r => filter === "all" || r.status === filter);
+        if (!visible.length) {
+          const row = document.createElement("tr"); const cell = document.createElement("td");
+          cell.colSpan = 12; cell.className = "empty";
+          cell.textContent = requests.length ? "No requests match this filter." : "No customer requests have been submitted yet.";
+          row.appendChild(cell); tbody.appendChild(row); return;
+        }
+        for (const request of visible) {
+          const row = document.createElement("tr");
+          const profile = profilesById.get(request.user_id) || {};
+          const customer = document.createElement("div"); customer.className = "customer-name"; customer.textContent = profile.full_name || "Customer";
+          const phone = document.createElement("div"); phone.className = "subtext"; phone.textContent = request.phone || profile.phone || "No phone provided";
+          const customerWrap = document.createElement("div"); customerWrap.append(customer, phone); addCell(row, customerWrap);
+          const requestDetails = String(request.details || "");
+          const isWifiPasswordRequest = requestDetails.startsWith("SAMKAR_WIFI_PASSWORD_CHANGE_REQUEST");
+          addCell(row, isWifiPasswordRequest ? "WiFi account password change" : (request.request_type || "—"));
+          addCell(row, request.service_location || profile.service_location || "—");
+          const packageText = request.package_name ? `${request.package_name}${request.speed_mbps ? ` (${request.speed_mbps} Mbps)` : ""}${money(request.monthly_price_kes)}` : "Not applicable";
+          addCell(row, packageText);
+          const details = document.createElement("div"); details.className = "details";
+          if (isWifiPasswordRequest) {
+            const heading = document.createElement("strong");
+            heading.textContent = "WiFi ACCOUNT PASSWORD CHANGE REQUEST";
+            heading.style.display = "block";
+            heading.style.color = "#0757a5";
+            heading.style.marginBottom = "6px";
+            details.appendChild(heading);
+            const accountMatch = requestDetails.match(/^SAMKAR account number:\s*(.+)$/im);
+            const locationMatch = requestDetails.match(/^Service location:\s*(.+)$/im);
+            const packageMatch = requestDetails.match(/^Package:\s*(.+)$/im);
+            const passwordMatch = requestDetails.match(/^Requested WiFi password:\s*(.*)$/im);
+            const customerEmailMatch = requestDetails.match(/^Customer email:\s*(.+)$/im);
+            const rows = [
+              ["Customer email", customerEmailMatch],
+              ["WiFi account", accountMatch],
+              ["Package", packageMatch],
+              ["Service location", locationMatch]
+            ];
+            rows.forEach(([label, match]) => {
+              if (!match) return;
+              const line = document.createElement("div");
+              line.textContent = `${label}: ${match[1]}`;
+              details.appendChild(line);
+            });
+            const passwordBox = document.createElement("div");
+            passwordBox.style.marginTop = "8px";
+            passwordBox.style.padding = "8px";
+            passwordBox.style.border = "1px solid #e1e8f0";
+            passwordBox.style.borderRadius = "7px";
+            passwordBox.style.background = "#f8fafc";
+            const passwordLabel = document.createElement("strong");
+            passwordLabel.textContent = "Requested WiFi password: ";
+            const passwordValue = document.createElement("span");
+            passwordValue.textContent = passwordMatch ? passwordMatch[1] : "Not provided";
+            passwordValue.style.overflowWrap = "anywhere";
+            passwordBox.append(passwordLabel, passwordValue);
+            details.appendChild(passwordBox);
+            const adminInstruction = document.createElement("div");
+            adminInstruction.className = "subtext";
+            adminInstruction.style.marginTop = "7px";
+            adminInstruction.textContent = "Apply this password to the specified WiFi account, then update the request status.";
+            details.appendChild(adminInstruction);
+          } else {
+            details.textContent = request.details || "—";
+          }
+          if (
+            String(request.request_type || "").toLowerCase() === "other" &&
+            requestDetails.startsWith("Client Portal login password change request.")
+          ) {
+            const emailMatch = String(request.details || "").match(/Customer email:\s*([^\s]+)/i);
+            const recoveryButton = document.createElement("button");
+            recoveryButton.type = "button";
+            recoveryButton.className = "small-button";
+            recoveryButton.textContent = "Send password recovery email";
+            recoveryButton.style.marginTop = "8px";
+            recoveryButton.disabled = !emailMatch;
+            recoveryButton.title = emailMatch ? "Send a secure Supabase password recovery email to this customer" : "Customer email was not found in request details";
+            recoveryButton.addEventListener("click", () => sendPasswordRecoveryEmail(emailMatch ? emailMatch[1] : "", recoveryButton));
+            details.appendChild(document.createElement("br"));
+            details.appendChild(recoveryButton);
+          }
+          addCell(row, details);
+          addCell(row, formatDate(request.created_at)); addCell(row, makeStatusBadge(request.status));
+          const statusSelect = document.createElement("select"); statusSelect.className = "status-select"; statusSelect.setAttribute("aria-label", `Update status for request ${request.id}`);
+          for (const option of statusOptions) { const opt = document.createElement("option"); opt.value = option.value; opt.textContent = option.label; opt.selected = option.value === request.status; statusSelect.appendChild(opt); }
+          statusSelect.addEventListener("change", () => updateRequestStatus(request.id, statusSelect.value, statusSelect)); addCell(row, statusSelect);
+          const techSelect = document.createElement("select"); techSelect.className = "status-select"; techSelect.setAttribute("aria-label", "Assigned technician");
+          techSelect.add(new Option("Unassigned", ""));
+          technicians.filter(t => t.is_active).forEach(t => techSelect.add(new Option(`${t.full_name} · ${t.service_area}`, t.id)));
+          techSelect.value = request.technician_id || "";
+          if (request.technician_id && !technicians.some(t => t.id === request.technician_id && t.is_active)) techSelect.add(new Option("Assigned technician (inactive)", request.technician_id));
+          techSelect.value = request.technician_id || "";
+          addCell(row, techSelect);
+          const schedule = document.createElement("input"); schedule.type = "datetime-local"; schedule.setAttribute("aria-label", "Scheduled visit date and time"); schedule.value = localDateTime(request.scheduled_for); schedule.title = "Optional scheduled visit"; schedule.style.minWidth = "190px";
+          addCell(row, schedule);
+          const save = document.createElement("button"); save.type = "button"; save.className = "small-button"; save.textContent = "Save assignment";
+          save.addEventListener("click", () => saveAssignment(request.id, techSelect.value, schedule.value, save)); addCell(row, save);
+          const feedbackWrap = document.createElement("div"); feedbackWrap.className = "details";
+          feedbackWrap.textContent = request.technician_feedback ? `${request.technician_feedback}${request.technician_feedback_at ? `\n\nSent: ${formatDate(request.technician_feedback_at)}` : ""}` : "No technician feedback yet.";
+          addCell(row, feedbackWrap);
+          tbody.appendChild(row);
+        }
+      }
+      async function loadTechnicians() {
+        try {
+          const { data, error } = await supabaseClient.from("technicians").select("id,full_name,phone,service_area,is_active,auth_user_id,created_at").order("full_name", { ascending: true });
+          if (error) throw error;
+          technicians = data || []; renderTechnicians(); renderRequests();
+        } catch (error) {
+          showTechnicianNotice(`Could not load technicians: ${error.message || "Check the technician setup SQL."}`, "error");
+          const body = $("technicianRows"); body.replaceChildren(); const row = document.createElement("tr"); const cell = document.createElement("td"); cell.colSpan = 6; cell.className = "empty"; cell.textContent = "Technician records could not be loaded. Run the technician portal SQL, then refresh."; row.appendChild(cell); body.appendChild(row);
+        }
+      }
+      function showTechnicianNotice(message, type = "info") { const el = $("technicianMessage"); el.textContent = message; el.className = `notice show ${type}`; }
+      function renderTechnicians() {
+        const body = $("technicianRows"); body.replaceChildren();
+        if (!technicians.length) { const row = document.createElement("tr"); const cell = document.createElement("td"); cell.colSpan = 6; cell.className = "empty"; cell.textContent = "No technicians added yet. Add your first technician above."; row.appendChild(cell); body.appendChild(row); return; }
+        technicians.forEach(t => {
+          const row = document.createElement("tr");
+          addCell(row, t.full_name); addCell(row, t.phone); addCell(row, t.service_area);
+          const linkWrap = document.createElement("div"); linkWrap.className = "assignment-controls";
+          const uidInput = document.createElement("input"); uidInput.type = "text"; uidInput.placeholder = "Paste Supabase Auth User UID"; uidInput.setAttribute("aria-label", `Supabase user UID for ${t.full_name}`); uidInput.value = t.auth_user_id || ""; uidInput.maxLength = 36;
+          const linkButton = document.createElement("button"); linkButton.type = "button"; linkButton.className = "small-button"; linkButton.textContent = t.auth_user_id ? "Update login link" : "Link login";
+          linkButton.addEventListener("click", () => linkTechnicianLogin(t, uidInput, linkButton));
+          linkWrap.append(uidInput, linkButton); addCell(row, linkWrap);
+          const loginState = document.createElement("div"); loginState.className = "subtext"; loginState.textContent = t.auth_user_id ? `Linked: ${t.auth_user_id.slice(0,8)}…` : "No login linked";
+          addCell(row, loginState);
+          const action = document.createElement("button"); action.type = "button"; action.className = "small-button"; action.textContent = t.is_active ? "Deactivate" : "Activate"; action.addEventListener("click", () => toggleTechnician(t, action)); addCell(row, action);
+          body.appendChild(row);
+        });
+      }
+      async function linkTechnicianLogin(technician, input, button) {
+        const uid = input.value.trim();
+        if (uid && !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uid)) {
+          showTechnicianNotice("Enter the complete Supabase Auth User UID (UUID), or leave it blank to unlink the login.", "error"); return;
+        }
+        button.disabled = true;
+        try {
+          const { error } = await supabaseClient.from("technicians").update({ auth_user_id: uid || null }).eq("id", technician.id);
+          if (error) throw error;
+          showTechnicianNotice(uid ? `Login linked to ${technician.full_name}.` : `Login unlinked from ${technician.full_name}.`, "success");
+          await loadTechnicians();
+        } catch (error) { showTechnicianNotice(`Could not link login: ${error.message || "Unknown database error"}`, "error"); button.disabled = false; }
+      }
+      async function toggleTechnician(technician, button) {
+        button.disabled = true;
+        try { const { error } = await supabaseClient.from("technicians").update({ is_active: !technician.is_active }).eq("id", technician.id); if (error) throw error; showTechnicianNotice(`${technician.full_name} is now ${technician.is_active ? "inactive" : "active"}.`, "success"); await loadTechnicians(); }
+        catch (error) { showTechnicianNotice(`Could not update technician: ${error.message || "Unknown error"}`, "error"); button.disabled = false; }
+      }
+      async function saveAssignment(requestId, technicianId, scheduledValue, button) {
+        button.disabled = true; const oldText = button.textContent; button.textContent = "Saving…";
+        try {
+          const update = { technician_id: technicianId || null, scheduled_for: scheduledValue ? new Date(scheduledValue).toISOString() : null };
+          const { error } = await supabaseClient.from("service_requests").update(update).eq("id", requestId);
+          if (error) throw error;
+          const item = requests.find(r => r.id === requestId); if (item) { item.technician_id = update.technician_id; item.scheduled_for = update.scheduled_for; }
+          showNotice("Technician assignment and schedule saved.", "success"); await loadRequests();
+        } catch (error) { showNotice(`Assignment was not saved: ${error.message || "Check technician setup and admin permissions."}`, "error"); }
+        finally { button.disabled = false; button.textContent = oldText; }
+      }
+
+      function renderCustomers() {
+        const tbody = $("customerRows");
+        tbody.replaceChildren();
+        const query = $("customerSearch").value.trim().toLowerCase();
+        const visible = customers.filter(profile =>
+          [profile.full_name, profile.phone, profile.service_location, profile.id]
+            .some(value => String(value || "").toLowerCase().includes(query))
+        );
+        $("customerCount").textContent = `${visible.length} customer${visible.length === 1 ? "" : "s"}${query ? " found" : " registered"}`;
+        if (!visible.length) {
+          const row = document.createElement("tr");
+          const cell = document.createElement("td");
+          cell.colSpan = 5; cell.className = "empty";
+          cell.textContent = customers.length ? "No customers match your search." : "No customer profiles have been saved yet.";
+          row.appendChild(cell); tbody.appendChild(row); return;
+        }
+        for (const profile of visible) {
+          const row = document.createElement("tr");
+          addCell(row, profile.full_name || "Name not provided");
+          addCell(row, profile.phone || "Phone not provided");
+          addCell(row, profile.service_location || "Location not provided");
+
+          const accountCell = document.createElement("td");
+          const customerSubs = customerSubscriptions.filter(sub => sub.user_id === profile.id);
+          if (!customerSubs.length) {
+            const empty = document.createElement("div");
+            empty.className = "account-empty";
+            empty.textContent = "No subscription yet. Create the subscription in Manage Billing first.";
+            accountCell.appendChild(empty);
+          } else {
+            for (const sub of customerSubs) {
+              const item = document.createElement("div"); item.className = "account-item";
+              const title = document.createElement("div"); title.className = "account-item-title";
+              title.textContent = `${sub.package_name || "Subscription"} · ${sub.status || "status unknown"} · ${sub.monthly_price_kes == null ? "" : formatKes(sub.monthly_price_kes)}`;
+              item.appendChild(title);
+              const editor = document.createElement("div"); editor.className = "account-editor";
+              const input = document.createElement("input"); input.type = "text"; input.maxLength = 80;
+              input.value = sub.account_number || "";
+              input.placeholder = "Enter account number";
+              input.setAttribute("aria-label", `Account number for ${profile.full_name || "customer"} ${sub.package_name || "subscription"}`);
+              const save = document.createElement("button"); save.type = "button"; save.className = "small-button"; save.textContent = "Save";
+              save.addEventListener("click", () => saveCustomerAccountNumber(sub, input, save));
+              editor.append(input, save); item.appendChild(editor); accountCell.appendChild(item);
+            }
+          }
+          row.appendChild(accountCell);
+          const shortId = profile.id ? `${profile.id.slice(0, 8)}…` : "—";
+          const idCell = addCell(row, shortId, "subtext");
+          if (profile.id) idCell.title = profile.id;
+          tbody.appendChild(row);
+        }
+      }
+
+      async function saveCustomerAccountNumber(subscription, input, button) {
+        const accountNumber = input.value.trim();
+        if (!accountNumber) {
+          showNotice("Enter an account number before saving.", "error");
+          return;
+        }
+        const originalText = button.textContent;
+        button.disabled = true; button.textContent = "Saving…";
+        try {
+          // Account numbers belong to subscriptions, not customer profiles, because one customer may have multiple accounts.
+          const { error } = await supabaseClient.from("subscriptions")
+            .update({ account_number: accountNumber })
+            .eq("id", subscription.id);
+          if (error) throw error;
+          subscription.account_number = accountNumber;
+          showNotice(`Account number saved for ${subscription.package_name || "the subscription"}. The client dashboard can display it once that page is configured to read subscriptions.account_number.`, "success");
+          renderCustomers();
+        } catch (error) {
+          showNotice(`Account number was not saved: ${error.message || "Check the subscriptions table and admin UPDATE policy."}`, "error");
+          button.disabled = false; button.textContent = originalText;
+        }
+      }
+
+      async function loadCustomers() {
+        const button = $("refreshCustomersButton");
+        button.disabled = true; button.textContent = "Loading…";
+        try {
+          const [profileResult, subscriptionResult] = await Promise.all([
+            supabaseClient.from("profiles").select("id,full_name,phone,service_location").order("full_name", { ascending: true }),
+            supabaseClient.from("subscriptions").select("id,user_id,account_number,package_name,status,monthly_price_kes").order("start_date", { ascending: false })
+          ]);
+          if (profileResult.error) throw profileResult.error;
+          customers = profileResult.data || [];
+          if (subscriptionResult.error) {
+            customerSubscriptions = [];
+            showNotice(`Customers loaded, but subscription account numbers could not be loaded: ${subscriptionResult.error.message}. Check admin SELECT access to subscriptions.`, "error");
+          } else {
+            customerSubscriptions = subscriptionResult.data || [];
+          }
+          renderCustomers();
+        } catch (error) {
+          $("customerCount").textContent = "Customer list could not be loaded.";
+          const tbody = $("customerRows"); tbody.replaceChildren();
+          const row = document.createElement("tr"), cell = document.createElement("td");
+          cell.colSpan = 5; cell.className = "empty";
+          cell.textContent = `Could not load customers: ${error.message || "Check the admin profiles SELECT policy."}`;
+          row.appendChild(cell); tbody.appendChild(row);
+        } finally {
+          button.disabled = false; button.textContent = "Refresh customers";
+        }
+      }
+
+      async function loadRequests() {
+        clearNotice();
+        $("refreshButton").disabled = true;
+        $("refreshButton").textContent = "Refreshing…";
+        try {
+          const { data, error } = await supabaseClient.from("service_requests")
+            .select("id,user_id,request_type,phone,details,service_location,package_name,speed_mbps,monthly_price_kes,status,created_at,technician_id,scheduled_for,technician_feedback,technician_feedback_at")
+            .order("created_at", { ascending: false });
+          if (error) throw error;
+          requests = data || [];
+          const userIds = [...new Set(requests.map(r => r.user_id).filter(Boolean))];
+          profilesById = new Map();
+          if (userIds.length) {
+            const { data: profiles, error: profileError } = await supabaseClient.from("profiles")
+              .select("id,full_name,phone,service_location").in("id", userIds);
+            if (profileError) {
+              showNotice("Requests loaded, but customer profile names could not be loaded. Check the admin profile SELECT policy.", "error");
+            } else {
+              for (const profile of (profiles || [])) profilesById.set(profile.id, profile);
+            }
+          }
+          updateStats(); renderRequests();
+        } catch (error) {
+          showNotice(`Could not load requests: ${error.message || "Unknown database error"}`, "error");
+          $("requestRows").replaceChildren();
+          const row = document.createElement("tr"), cell = document.createElement("td");
+          cell.colSpan = 12; cell.className = "empty"; cell.textContent = "Requests could not be loaded. Check the technician setup SQL and existing admin RLS policies."; row.appendChild(cell); $("requestRows").appendChild(row);
+        } finally {
+          $("refreshButton").disabled = false; $("refreshButton").textContent = "Refresh";
+        }
+      }
+      async function updateRequestStatus(id, status, select) {
+        select.disabled = true;
+        try {
+          const { error } = await supabaseClient.from("service_requests").update({ status }).eq("id", id);
+          if (error) throw error;
+          const request = requests.find(r => r.id === id);
+          if (request) request.status = status;
+          updateStats(); renderRequests();
+          showNotice("Request status updated. The customer will see this status in their portal.", "success");
+        } catch (error) {
+          showNotice(`Status was not updated: ${error.message || "Check admin permissions"}`, "error");
+          select.disabled = false;
+          await loadRequests();
+        }
+      }
+      function setOverviewValue(id, value) { $(id).textContent = value; }
+      function formatKes(value) { return `KSh ${Number(value || 0).toLocaleString("en-KE", { maximumFractionDigits: 0 })}`; }
+      async function loadOverview() {
+        const button = $("refreshOverviewButton");
+        if (button) { button.disabled = true; button.textContent = "Refreshing…"; }
+        try {
+          const results = await Promise.all([
+            supabaseClient.from("profiles").select("id", { count: "exact", head: true }),
+            supabaseClient.from("subscriptions").select("id,status,monthly_price_kes"),
+            supabaseClient.from("billing_invoices").select("id,status,amount_due_kes"),
+            supabaseClient.from("billing_payments").select("amount_kes,status"),
+            supabaseClient.from("service_requests").select("id,status"),
+            supabaseClient.from("technicians").select("id,is_active")
+          ]);
+          const [profileResult, subscriptionResult, invoiceResult, paymentResult, requestResult, technicianResult] = results;
+          const formatCount = value => Number(value || 0).toLocaleString("en-KE");
+          const subscriptions = subscriptionResult.error ? null : (subscriptionResult.data || []);
+          const invoices = invoiceResult.error ? null : (invoiceResult.data || []);
+          const payments = paymentResult.error ? null : (paymentResult.data || []);
+          const serviceRequests = requestResult.error ? null : (requestResult.data || []);
+          const techniciansList = technicianResult.error ? null : (technicianResult.data || []);
+
+          setOverviewValue("overviewCustomers", profileResult.error ? "—" : formatCount(profileResult.count));
+          const activeMonthlyTotal = subscriptions
+            ? subscriptions.filter(s => s.status === "active").reduce((sum, s) => sum + Number(s.monthly_price_kes || 0), 0)
+            : null;
+          const confirmedPaymentsTotal = payments
+            ? payments.filter(p => p.status === "confirmed").reduce((sum, p) => sum + Number(p.amount_kes || 0), 0)
+            : null;
+          if (subscriptions) {
+            const active = subscriptions.filter(s => s.status === "active");
+            setOverviewValue("overviewActiveSubs", formatCount(active.length));
+            setOverviewValue("overviewSuspendedSubs", formatCount(subscriptions.filter(s => s.status === "suspended").length));
+          } else {
+            setOverviewValue("overviewActiveSubs", "—"); setOverviewValue("overviewSuspendedSubs", "—");
+          }
+          // Net expected monthly value = active subscriptions' monthly prices minus all confirmed payment records.
+          // If either data source failed, show unavailable rather than a misleading partial amount.
+          if (activeMonthlyTotal !== null && confirmedPaymentsTotal !== null) {
+            setOverviewValue("overviewExpected", formatKes(activeMonthlyTotal - confirmedPaymentsTotal));
+          } else {
+            setOverviewValue("overviewExpected", "—");
+          }
+          if (invoices) {
+            const unpaid = invoices.filter(i => i.status === "unpaid");
+            setOverviewValue("overviewUnpaidCount", formatCount(unpaid.length));
+            setOverviewValue("overviewUnpaidAmount", `Outstanding balance: ${formatKes(unpaid.reduce((sum, i) => sum + Number(i.amount_due_kes || 0), 0))}`);
+          } else { setOverviewValue("overviewUnpaidCount", "—"); setOverviewValue("overviewUnpaidAmount", "Invoice data unavailable"); }
+          if (payments) setOverviewValue("overviewConfirmed", formatKes(payments.filter(p => p.status === "confirmed").reduce((sum, p) => sum + Number(p.amount_kes || 0), 0)));
+          else setOverviewValue("overviewConfirmed", "—");
+          if (techniciansList) setOverviewValue("overviewTechnicians", formatCount(techniciansList.filter(t => t.is_active).length));
+          else setOverviewValue("overviewTechnicians", "—");
+          if (serviceRequests) setOverviewValue("overviewOpenRequests", formatCount(serviceRequests.filter(r => !["completed", "rejected"].includes(r.status)).length));
+          else setOverviewValue("overviewOpenRequests", "—");
+
+          const failed = results.filter(result => result.error);
+          $("overviewUpdated").textContent = `Last refreshed: ${new Date().toLocaleString()}${failed.length ? ` · ${failed.length} data source(s) could not be read; check the relevant table permissions and schema.` : ""}`;
+        } catch (error) {
+          $("overviewUpdated").textContent = `Overview could not be refreshed: ${error.message || "Unknown database error"}`;
+        } finally {
+          if (button) { button.disabled = false; button.textContent = "Refresh overview"; }
+        }
+      }
+
+      async function initialise() {
+        $("errorMessage").hidden = true; $("accessMessage").hidden = true;
+        if (typeof SUPABASE_URL === "undefined" || typeof SUPABASE_PUBLISHABLE_KEY === "undefined") {
+          showFatal("Supabase configuration was not found. Keep supabase-config.js beside admin-dashboard.html and check its values."); return;
+        }
+        if (!window.supabase || !window.supabase.createClient) {
+          showFatal("Supabase could not load. Check your internet connection and try again."); return;
+        }
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
+        if (sessionError) { showFatal(sessionError.message); return; }
+        currentUser = sessionData.session?.user;
+        if (!currentUser) { window.location.href = "login.html"; return; }
+        $("adminEmail").textContent = currentUser.email || "Signed in";
+        const { data: roleRow, error: roleError } = await supabaseClient.from("user_roles").select("role").eq("user_id", currentUser.id).maybeSingle();
+        if (roleError) { showFatal(`Could not verify administrator access: ${roleError.message}. Run samkar-admin-setup.sql in Supabase first.`); return; }
+        if (!roleRow || roleRow.role !== "admin") { $("accessMessage").hidden = false; return; }
+        $("adminContent").hidden = false;
+        await Promise.all([loadCustomers(), loadTechnicians(), loadOverview()]);
+        await loadRequests();
+      }
+      $("technicianForm").addEventListener("submit", async (event) => {
+        event.preventDefault(); const button = $("addTechnicianButton"); button.disabled = true; button.textContent = "Adding…";
+        try {
+          const payload = { full_name: $("technicianName").value.trim(), phone: $("technicianPhone").value.trim(), service_area: $("technicianArea").value, is_active: true };
+          if (!payload.full_name || !payload.phone || !payload.service_area) throw new Error("Complete all technician fields.");
+          const { error } = await supabaseClient.from("technicians").insert(payload); if (error) throw error;
+          $("technicianForm").reset(); showTechnicianNotice("Technician added successfully.", "success"); await loadTechnicians();
+        } catch (error) { showTechnicianNotice(`Could not add technician: ${error.message || "Unknown error"}`, "error"); }
+        finally { button.disabled = false; button.textContent = "Add Technician"; }
+      });
+      $("refreshTechniciansButton").addEventListener("click", loadTechnicians);
+      $("refreshOverviewButton").addEventListener("click", loadOverview);
+      $("logoutButton").addEventListener("click", async () => {
+        if (supabaseClient) await supabaseClient.auth.signOut();
+        window.location.href = "login.html";
+      });
+      $("backButton").addEventListener("click", () => { window.location.href = "login.html"; });
+      $("retryButton").addEventListener("click", initialise);
+      $("refreshButton").addEventListener("click", loadRequests);
+      document.querySelectorAll(".stat-button[data-status]").forEach(button => {
+        button.addEventListener("click", () => {
+          activeStatusFilter = button.dataset.status;
+          updateStats();
+          renderRequests();
+          // Bring the filtered request list into view so the result is obvious.
+          const requestPanel = $("requestRows").closest(".panel");
+          if (requestPanel) requestPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+      $("refreshCustomersButton").addEventListener("click", loadCustomers);
+      $("customerSearch").addEventListener("input", renderCustomers);
+      document.addEventListener("DOMContentLoaded", initialise);
+    })();
+  </script>
+</body>
+</html>

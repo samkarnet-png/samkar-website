@@ -1,0 +1,1501 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#061b38">
+  <title>Client Dashboard | SAMKAR Network Solutions</title>
+  <style>
+    :root {
+      --navy: #061b38;
+      --blue: #0757a5;
+      --yellow: #ffc400;
+      --light: #f1f7fc;
+      --white: #fff;
+      --text: #25344a;
+      --muted: #64748b;
+      --border: #e1e8f0;
+      --green: #16834a;
+      --red: #c62828;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    [hidden] { display: none !important; }
+    .topbar {
+      background: var(--navy);
+      color: var(--white);
+      padding: 16px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .brand-icon { color: var(--yellow); font-size: 1.8rem; }
+    .brand small {
+      display: block;
+      font-size: .7rem;
+      color: #d5e5f7;
+      font-weight: 400;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .user-email {
+      font-size: .9rem;
+      color: #e0eaf5;
+      overflow-wrap: anywhere;
+    }
+    .logout-button {
+      background: var(--yellow);
+      color: var(--navy);
+      border: 0;
+      border-radius: 7px;
+      padding: 10px 17px;
+      font-weight: 700;
+    }
+    .logout-button:hover { background: #ffda50; }
+    .page-container {
+      width: min(1200px, 92%);
+      margin: 32px auto;
+    }
+    .welcome-panel {
+      background: linear-gradient(120deg, var(--navy), var(--blue));
+      color: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 25px;
+    }
+    .welcome-panel h1 {
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      margin-bottom: 8px;
+    }
+    .welcome-panel p { color: #e1ecf9; }
+    .welcome-panel strong { color: var(--yellow); }
+    .section, .info-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(6, 27, 56, .04);
+    }
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    h2, .info-card h3 { color: var(--navy); }
+    h2 { font-size: 1.35rem; }
+    .section-description {
+      color: var(--muted);
+      font-size: .92rem;
+      margin-top: 4px;
+    }
+    .location-control {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 220px;
+    }
+    label {
+      color: var(--navy);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      background: white;
+      color: var(--text);
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(7, 87, 165, .1);
+    }
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 17px;
+      margin-top: 20px;
+    }
+    .package-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 18px;
+      background: white;
+      transition: .2s;
+    }
+    .package-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--blue);
+      box-shadow: 0 8px 22px rgba(6, 27, 56, .08);
+    }
+    .package-label, .package-note {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+    .package-speed {
+      font-size: 1.8rem;
+      color: var(--navy);
+      line-height: 1.3;
+    }
+    .package-price {
+      color: var(--blue);
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin: 12px 0 6px;
+    }
+    .status-message {
+      padding: 13px 15px;
+      border-radius: 8px;
+      background: #eaf3ff;
+      color: var(--blue);
+      margin-top: 12px;
+      overflow-wrap: anywhere;
+    }
+    .status-message.error { background: #fff0f0; color: var(--red); }
+    .status-message.success { background: #eaf8ef; color: var(--green); }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+    .info-card { margin-bottom: 0; }
+    .info-icon {
+      width: 45px;
+      height: 45px;
+      display: grid;
+      place-items: center;
+      background: #eaf3ff;
+      color: var(--blue);
+      border-radius: 10px;
+      font-size: 1.4rem;
+      margin-bottom: 14px;
+    }
+    .info-card h3 { margin-bottom: 7px; }
+    .info-card p { color: var(--muted); font-size: .92rem; }
+    .primary-button {
+      border: 0;
+      border-radius: 7px;
+      background: var(--blue);
+      color: white;
+      padding: 11px 17px;
+      font-weight: 700;
+      margin-top: 15px;
+    }
+    .primary-button:hover { background: var(--navy); }
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+    .profile-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+    .profile-item {
+      padding: 14px;
+      background: var(--light);
+      border-radius: 8px;
+      overflow-wrap: anywhere;
+    }
+    .profile-item span {
+      display: block;
+      color: var(--muted);
+      font-size: .83rem;
+      margin-bottom: 4px;
+    }
+    .profile-item strong { color: var(--navy); }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-field.full-width { grid-column: 1 / -1; }
+    .footer {
+      text-align: center;
+      padding: 24px 5%;
+      background: var(--navy);
+      color: #d5e5f7;
+      font-size: .88rem;
+    }
+    .footer strong { color: var(--yellow); }
+    .billing-summary { border-top: 5px solid var(--yellow); }
+    .balance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 18px; }
+    .balance-card { border: 1px solid var(--border); border-radius: 12px; padding: 20px; background: #f8fbff; }
+    .balance-card .label { color: var(--muted); font-size: .88rem; }
+    .balance-amount { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 800; color: var(--navy); overflow-wrap: anywhere; margin: 5px 0; }
+    .balance-amount.negative { color: var(--red); }
+    .balance-amount.positive { color: var(--green); }
+    .billing-help { color: var(--muted); font-size: .9rem; margin-top: 8px; }
+    .history-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 16px; }
+    .history-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px; background: #fff; min-width: 0; }
+    .history-card h3 { color: var(--navy); font-size: 1rem; overflow-wrap: anywhere; }
+    .history-line { margin-top: 6px; font-size: .9rem; overflow-wrap: anywhere; }
+    .history-line span { color: var(--muted); }
+    .status-pill { display: inline-block; padding: 3px 9px; border-radius: 999px; background: #eaf3ff; color: var(--blue); font-size: .78rem; font-weight: 700; text-transform: capitalize; }
+    .status-pill.paid, .status-pill.confirmed { background: #eaf8ef; color: var(--green); }
+    .status-pill.overdue, .status-pill.unpaid, .status-pill.rejected, .status-pill.suspended { background: #fff0f0; color: var(--red); }
+    .history-empty { border: 1px dashed var(--border); border-radius: 10px; padding: 20px; color: var(--muted); grid-column: 1 / -1; }
+
+    .account-open-button { width: 100%; text-align: left; border: 1px solid var(--border); border-radius: 12px; padding: 18px; background: #fff; color: var(--text); transition: .2s; }
+    .account-open-button:hover, .account-open-button:focus { border-color: var(--blue); box-shadow: 0 6px 18px rgba(6, 27, 56, .08); outline: none; }
+    .account-open-button .package-speed { margin: 5px 0; }
+    .account-open-button .open-hint { color: var(--blue); font-size: .88rem; font-weight: 700; margin-top: 12px; }
+    .account-detail-panel { margin-top: 20px; padding: 22px; border: 1px solid var(--border); border-radius: 12px; background: #f8fbff; }
+    .account-detail-panel h3 { color: var(--navy); margin-bottom: 12px; }
+    .account-detail-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .secondary-button { border: 1px solid var(--blue); border-radius: 7px; background: white; color: var(--blue); padding: 10px 15px; font-weight: 700; margin-top: 15px; }
+    .account-password-form { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .account-password-form .form-grid { margin-top: 12px; }
+    .account-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+    .account-detail-grid .profile-item { background: white; }
+
+    @media (max-width: 600px) {
+      .topbar { padding: 15px 4%; }
+      .page-container { width: 94%; margin: 20px auto; }
+      .welcome-panel, .section, .info-card { padding: 20px; }
+      .location-control { width: 100%; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-field.full-width { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">⌁</span>
+      <div>
+        SAMKAR
+        <small>NETWORK SOLUTIONS</small>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span id="headerEmail" class="user-email">Checking account...</span>
+      <button id="logoutButton" class="logout-button" type="button">
+        Sign Out
+      </button>
+    </div>
+  </header>
+  <div id="loadingScreen" class="page-container">
+    <section class="section">
+      <h2>Connecting to SAMKAR...</h2>
+      <p id="loadingMessage" class="section-description">
+        Checking your account.
+      </p>
+    </section>
+  </div>
+  <main class="page-container" id="dashboard" hidden>
+    <section class="welcome-panel">
+      <h1>Welcome to your Client Portal</h1>
+      <p>
+        Manage your <strong>Home Fibre Internet</strong> account, view
+        packages in your area and update your customer details.
+      </p>
+    </section>
+    <div id="globalMessage" class="status-message" role="status" hidden></div>
+
+    <section class="section billing-summary" id="balanceSection">
+      <div class="section-heading">
+        <div>
+          <h2>My Balance</h2>
+          <p class="section-description">Your balance combines invoices and confirmed payments across all your SAMKAR subscriptions.</p>
+        </div>
+        <button id="refreshBillingButton" class="primary-button" type="button" style="margin-top: 0;">Refresh Billing</button>
+      </div>
+      <div class="balance-grid">
+        <div class="balance-card">
+          <p class="label">Total account balance</p>
+          <p id="totalBalance" class="balance-amount">KSh 0</p>
+          <p id="balanceExplanation" class="billing-help">Loading invoices and confirmed payments...</p>
+        </div>
+        <div class="balance-card">
+          <p class="label">Outstanding invoices</p>
+          <p id="outstandingTotal" class="balance-amount">KSh 0</p>
+          <p class="billing-help">Amount still unpaid after confirmed payments.</p>
+        </div>
+        <div class="balance-card">
+          <p class="label">Confirmed payments</p>
+          <p id="confirmedTotal" class="balance-amount positive">KSh 0</p>
+          <p class="billing-help">Payments confirmed by SAMKAR staff.</p>
+        </div>
+      </div>
+      <div id="billingStatus" class="status-message" role="status" style="margin-top: 16px;">Loading your billing information...</div>
+    </section>
+
+    <section class="section" id="profileSummarySection">
+      <div class="section-heading">
+        <div>
+          <h2>My Profile</h2>
+          <p class="section-description">Your personal details currently saved with SAMKAR.</p>
+        </div>
+      </div>
+      <div class="profile-details">
+        <div class="profile-item">
+          <span>Account email</span>
+          <strong id="profileEmail">Loading...</strong>
+        </div>
+        <div class="profile-item">
+          <span>Full name</span>
+          <strong id="displayName">Not saved yet</strong>
+        </div>
+        <div class="profile-item">
+          <span>Phone number</span>
+          <strong id="displayPhone">Not saved yet</strong>
+        </div>
+        <div class="profile-item">
+          <span>Service location</span>
+          <strong id="displayLocation">Nyahururu</strong>
+        </div>
+      </div>
+    </section>
+
+    <div id="manageBillingSection">
+      <section class="section" id="manageBillingHeading">
+        <div class="section-heading">
+          <div>
+            <h2>Manage Billing</h2>
+            <p class="section-description">Open this section to view your internet accounts, invoices and payment history.</p>
+          </div>
+          <button id="toggleManageBillingButton" class="primary-button" type="button" aria-expanded="false" aria-controls="manageBillingContent">Open Manage Billing</button>
+        </div>
+      </section>
+      <div id="manageBillingContent" hidden>
+    <section class="section" id="myAccountsSection">
+      <div class="section-heading">
+        <div>
+          <h2>My Internet Accounts</h2>
+          <p class="section-description">Each subscription has its own account number. If you have more than one subscription, all of them will appear here.</p>
+        </div>
+        <button id="refreshSubscriptionsButton" class="primary-button" type="button" style="margin-top: 0;">Refresh Accounts</button>
+      </div>
+      <div id="subscriptionsStatus" class="status-message" role="status">Loading your internet accounts...</div>
+      <div id="subscriptionsList" class="packages-grid"></div>
+      <section id="accountDetailsPanel" class="account-detail-panel" hidden aria-live="polite">
+        <div class="section-heading">
+          <div>
+            <h3 id="accountDetailsTitle">Internet Account Details</h3>
+            <p class="section-description">Select an account above to view its details and account services.</p>
+          </div>
+          <button id="closeAccountDetailsButton" class="secondary-button" type="button" style="margin-top:0;">Close details</button>
+        </div>
+        <div id="accountDetailsGrid" class="account-detail-grid"></div>
+        <div class="account-detail-actions">
+          <button id="requestAccountServiceButton" class="primary-button" type="button" style="margin-top:0;">Request a service for this account</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="section" id="invoiceHistorySection">
+      <div class="section-heading">
+        <div>
+          <h2>My Invoices</h2>
+          <p class="section-description">Review charges, billing periods, due dates and remaining amounts for each account.</p>
+        </div>
+      </div>
+      <div id="invoicesStatus" class="status-message" role="status">Loading your invoices...</div>
+      <div id="invoicesList" class="history-list"></div>
+    </section>
+
+    <section class="section" id="paymentHistorySection">
+      <div class="section-heading">
+        <div>
+          <h2>My Payment History</h2>
+          <p class="section-description">See payment submissions and whether SAMKAR has confirmed them.</p>
+        </div>
+      </div>
+      <div id="paymentsStatus" class="status-message" role="status">Loading your payment history...</div>
+      <div id="paymentsList" class="history-list"></div>
+    </section>
+      </div>
+    </div>
+
+    <section class="section" id="packages">
+      <div class="section-heading">
+        <div>
+          <h2>Internet Packages</h2>
+          <p class="section-description">
+            Select your service location to view available monthly packages.
+          </p>
+        </div>
+        <div class="location-control">
+          <label for="locationSelect">Service location</label>
+          <select id="locationSelect">
+            <option value="Nyahururu">Nyahururu</option>
+            <option value="Maralal">Maralal</option>
+            <option value="Ol Kalou">Ol Kalou</option>
+            <option value="MA4">MA4</option>
+          </select>
+        </div>
+      </div>
+      <div id="packageStatus" class="status-message" role="status">
+        Loading packages...
+      </div>
+      <div id="packageGrid" class="packages-grid"></div>
+    </section>
+    <section class="section" id="supportHeading">
+      <div class="section-heading">
+        <div>
+          <h2>Support</h2>
+          <p class="section-description">Submit a service request and track updates from SAMKAR.</p>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="requestSection">
+      <div class="section-heading">
+        <div>
+          <h2>Request Technical Support</h2>
+          <p class="section-description">
+            Prepare a support request for your records.
+          </p>
+        </div>
+      </div>
+      <div id="requestMessage" class="status-message" role="status" hidden></div>
+      <div id="selectedPackagePanel" class="status-message" hidden>
+        <strong>Selected package:</strong> <span id="selectedPackageText"></span>
+        <button id="clearSelectedPackage" type="button" class="primary-button" style="margin: 8px 0 0 10px;">Clear selection</button>
+      </div>
+      <form id="supportForm">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="requestType">Request type</label>
+            <select id="requestType" required>
+              <option value="">Select a request</option>
+              <option value="New installation">New installation</option>
+              <option value="Internet connection problem">Internet connection problem</option>
+              <option value="Slow internet">Slow internet</option>
+              <option value="Billing question">Billing question</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="requestPhone">Contact phone number</label>
+            <input id="requestPhone" type="tel" placeholder="e.g. 07XXXXXXXX" required>
+          </div>
+          <div class="form-field full-width">
+            <label for="requestDetails">Describe your request</label>
+            <textarea id="requestDetails" rows="4"
+              placeholder="Explain how we can help you..." required></textarea>
+          </div>
+        </div>
+        <button id="submitRequestButton" class="primary-button" type="submit">Submit Request</button>
+      </form>
+      <p class="section-description" style="margin-top: 12px;">
+        Requests are saved securely to your SAMKAR account. Staff review and update request status separately.
+      </p>
+    </section>
+    <section class="section" id="wifiPasswordRequestSection">
+      <div class="section-heading">
+        <div>
+          <h2>Request WiFi Account Password Change</h2>
+          <p class="section-description">Choose the specific SAMKAR internet account and enter the new WiFi password you want SAMKAR to set for that account. This does not change your Client Portal login password.</p>
+        </div>
+      </div>
+      <form id="accountPasswordForm" class="account-password-form">
+        <div class="form-grid">
+          <div class="form-field full-width">
+            <label for="wifiPasswordAccount">Select the internet account</label>
+            <select id="wifiPasswordAccount" required>
+              <option value="">Loading your internet accounts...</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="requestedWifiPassword">New WiFi password you want</label>
+            <input id="requestedWifiPassword" type="password" minlength="8" maxlength="63" autocomplete="new-password" required placeholder="Enter your preferred WiFi password">
+          </div>
+          <div class="form-field">
+            <label for="confirmRequestedWifiPassword">Confirm new WiFi password</label>
+            <input id="confirmRequestedWifiPassword" type="password" minlength="8" maxlength="63" autocomplete="new-password" required placeholder="Enter it again">
+          </div>
+        </div>
+        <p class="section-description" style="margin:8px 0 12px;">Use 8–63 characters. Your requested password will be visible to authorised SAMKAR administrators so they can update the selected WiFi account. Do not reuse your Client Portal password.</p>
+        <button id="changeAccountPasswordButton" class="primary-button" type="submit">Submit WiFi Password Request</button>
+        <div id="accountPasswordMessage" class="status-message" role="status" hidden></div>
+      </form>
+    </section>
+
+    <section class="section" id="myRequestsSection">
+      <div class="section-heading">
+        <div>
+          <h2>My Requests</h2>
+          <p class="section-description">Track installation and support requests submitted from your account.</p>
+        </div>
+        <button id="refreshRequestsButton" class="primary-button" type="button" style="margin-top: 0;">Refresh</button>
+      </div>
+      <div id="requestsStatus" class="status-message" role="status">Loading your requests...</div>
+      <div id="requestsList" class="packages-grid"></div>
+    </section>
+    <section class="section" id="profileSection">
+      <div class="section-heading">
+        <div>
+          <h2>Edit Profile</h2>
+          <p class="section-description">
+            Update the personal details associated with your SAMKAR account.
+          </p>
+        </div>
+      </div>
+      <h3 style="color: var(--navy); margin-bottom: 14px;">
+        Update Your Details
+      </h3>
+      <div id="profileMessage" class="status-message" role="status" hidden></div>
+      <form id="profileForm">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="fullName">Full name</label>
+            <input
+              id="fullName"
+              name="full_name"
+              type="text"
+              maxlength="120"
+              autocomplete="name"
+              placeholder="Enter your full name"
+              required
+            >
+          </div>
+          <div class="form-field">
+            <label for="phone">Phone number</label>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              maxlength="25"
+              autocomplete="tel"
+              placeholder="e.g. 07XXXXXXXX"
+              required
+            >
+          </div>
+          <div class="form-field full-width">
+            <label for="profileLocation">Service location</label>
+            <select id="profileLocation" name="service_location" required>
+              <option value="Nyahururu">Nyahururu</option>
+              <option value="Maralal">Maralal</option>
+              <option value="Ol Kalou">Ol Kalou</option>
+              <option value="MA4">MA4</option>
+            </select>
+          </div>
+        </div>
+        <button id="saveProfileButton" class="primary-button" type="submit">
+          Save Profile
+        </button>
+      </form>
+    </section>
+  </main>
+  <footer class="footer">
+    <p>&copy; <span id="currentYear"></span>
+      <strong>SAMKAR Network Solutions</strong>. All rights reserved.</p>
+    <p>Reliable connectivity. Professional service.</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script>
+    (() => {
+      "use strict";
+      const $ = (id) => document.getElementById(id);
+      const loadingScreen = $("loadingScreen");
+      const loadingMessage = $("loadingMessage");
+      const dashboard = $("dashboard");
+      const headerEmail = $("headerEmail");
+      const logoutButton = $("logoutButton");
+      const locationSelect = $("locationSelect");
+      const packageGrid = $("packageGrid");
+      const packageStatus = $("packageStatus");
+      const globalMessage = $("globalMessage");
+      const profileForm = $("profileForm");
+      const saveProfileButton = $("saveProfileButton");
+      let supabaseClient;
+      let currentUser;
+      let selectedPackage = null;
+$("currentYear").textContent = new Date().getFullYear();
+      function showMessage(element, message, type = "") {
+        element.textContent = message;
+        element.className = "status-message" + (type ? " " + type : "");
+        element.hidden = false;
+      }
+      function hideMessage(element) {
+        element.hidden = true;
+      }
+      async function renderPackages(location) {
+        packageGrid.replaceChildren();
+        showMessage(packageStatus, "Loading packages for " + location + "...");
+        const { data, error } = await supabaseClient
+          .from("packages")
+          .select("location, package_name, speed_mbps, monthly_price_kes")
+          .eq("location", location)
+          .eq("is_active", true)
+          .order("speed_mbps", { ascending: true });
+        if (error) {
+          console.error("Package loading error:", error);
+          showMessage(
+            packageStatus,
+            "Could not load packages. Please try refreshing the page.",
+            "error"
+          );
+          return;
+        }
+        if (!data || data.length === 0) {
+          showMessage(
+            packageStatus,
+            "No active packages found for " + location + "."
+          );
+          return;
+        }
+        const fragment = document.createDocumentFragment();
+        data.forEach((pkg) => {
+          const card = document.createElement("article");
+          card.className = "package-card";
+          const label = document.createElement("p");
+          label.className = "package-label";
+          label.textContent = pkg.package_name || "Home Fibre Internet";
+          const speed = document.createElement("h3");
+          speed.className = "package-speed";
+          speed.textContent = pkg.speed_mbps + " Mbps";
+          const price = document.createElement("p");
+          price.className = "package-price";
+          price.textContent =
+            "KSh " +
+            Number(pkg.monthly_price_kes).toLocaleString("en-KE") +
+            " / month";
+          const note = document.createElement("p");
+          note.className = "package-note";
+          note.textContent = "Home Fibre Internet";
+          const requestButton = document.createElement("button");
+          requestButton.type = "button";
+          requestButton.className = "primary-button";
+          requestButton.textContent = "Request Installation";
+          requestButton.addEventListener("click", () => {
+            selectedPackage = {
+              location: pkg.location,
+              package_name: pkg.package_name || "Home Fibre Internet",
+              speed_mbps: Number(pkg.speed_mbps),
+              monthly_price_kes: Number(pkg.monthly_price_kes)
+            };
+            $("selectedPackageText").textContent =
+              selectedPackage.package_name + " — " + selectedPackage.speed_mbps +
+              " Mbps — KSh " + selectedPackage.monthly_price_kes.toLocaleString("en-KE") +
+              "/month (" + selectedPackage.location + ")";
+            $("selectedPackagePanel").hidden = false;
+            $("requestType").value = "New installation";
+            $("requestDetails").value = "I would like to request installation of the selected package.";
+            $("requestSection").scrollIntoView({ behavior: "smooth", block: "start" });
+            $("requestPhone").focus({ preventScroll: true });
+          });
+          card.append(label, speed, price, note, requestButton);
+          fragment.appendChild(card);
+        });
+        packageGrid.appendChild(fragment);
+        showMessage(
+          packageStatus,
+          data.length + " packages loaded for " + location + ".",
+          "success"
+        );
+      }
+      function formatMoney(value) {
+        if (value === null || value === undefined || value === "") return "Not available";
+        return "KSh " + Number(value).toLocaleString("en-KE");
+      }
+
+      function humanStatus(value) {
+        return String(value || "pending").replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+      }
+
+      let selectedSubscription = null;
+
+      function renderWifiPasswordAccountOptions() {
+        const select = $("wifiPasswordAccount");
+        if (!select) return;
+        const previousValue = select.value;
+        select.replaceChildren(new Option("Choose the internet account", ""));
+        (customerSubscriptions || []).forEach((subscription) => {
+          const account = subscription.account_number || subscription.id;
+          const label = `${subscription.account_number || "Account number pending"} · ${subscription.package_name || "Internet package"} · ${subscription.service_location || "Location not specified"}`;
+          select.add(new Option(label, subscription.id));
+        });
+        if (previousValue && customerSubscriptions.some((item) => item.id === previousValue)) {
+          select.value = previousValue;
+        } else if (customerSubscriptions.length === 1) {
+          select.value = customerSubscriptions[0].id;
+        }
+        if (!customerSubscriptions.length) {
+          select.replaceChildren(new Option("No internet accounts found", ""));
+        }
+      }
+
+      function addAccountDetail(label, value) {
+        const item = document.createElement("div");
+        item.className = "profile-item";
+        const caption = document.createElement("span");
+        caption.textContent = label;
+        const strong = document.createElement("strong");
+        strong.textContent = value == null || value === "" ? "Not specified" : String(value);
+        item.append(caption, strong);
+        $("accountDetailsGrid").appendChild(item);
+      }
+
+      function openAccountDetails(subscription) {
+        selectedSubscription = subscription;
+        const balanceValue = subscriptionBalance(subscription.id);
+        $("accountDetailsTitle").textContent = "Account " + (subscription.account_number || "Details");
+        $("accountDetailsGrid").replaceChildren();
+        addAccountDetail("Account number", subscription.account_number || "Not assigned");
+        addAccountDetail("Internet package", subscription.package_name || "Home Fibre Internet");
+        addAccountDetail("Internet speed", subscription.speed_mbps != null ? subscription.speed_mbps + " Mbps" : "Not specified");
+        addAccountDetail("Monthly subscription", formatMoney(subscription.monthly_price_kes));
+        addAccountDetail("Service location", subscription.service_location);
+        addAccountDetail("Account status", humanStatus(subscription.status));
+        addAccountDetail("Monthly billing day", subscription.billing_day != null ? subscription.billing_day : "Not specified");
+        addAccountDetail("Subscription start date", subscription.start_date ? new Date(subscription.start_date + "T00:00:00").toLocaleDateString("en-KE", { dateStyle: "medium" }) : "Not specified");
+        addAccountDetail("Account balance", (balanceValue < 0 ? "−" : balanceValue > 0 ? "+" : "") + formatMoney(Math.abs(balanceValue)));
+        $("accountPasswordForm").reset();
+        hideMessage($("accountPasswordMessage"));
+        $("accountDetailsPanel").hidden = false;
+        $("accountDetailsPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      async function loadSubscriptions() {
+        const status = $("subscriptionsStatus");
+        const list = $("subscriptionsList");
+        list.replaceChildren();
+        $("accountDetailsPanel").hidden = true;
+        selectedSubscription = null;
+        showMessage(status, "Loading your internet accounts...");
+
+        const { data, error } = await supabaseClient
+          .from("subscriptions")
+          .select("id, account_number, package_name, speed_mbps, monthly_price_kes, service_location, status, start_date, billing_day")
+          .eq("user_id", currentUser.id)
+          .order("start_date", { ascending: false });
+
+        if (error) {
+          console.error("Subscription loading error:", error);
+          showMessage(status, "Could not load your internet accounts. Please check that your subscriptions table allows customers to read their own subscriptions through its RLS policy.", "error");
+          return;
+        }
+
+        customerSubscriptions = data || [];
+        renderWifiPasswordAccountOptions();
+        if (!data || data.length === 0) {
+          showMessage(status, "No internet subscriptions are linked to your account yet. If you have recently registered or paid for a package, please contact SAMKAR support.");
+          renderBalanceSummary();
+          return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        data.forEach((subscription) => {
+          const card = document.createElement("article");
+          card.className = "package-card";
+          const openButton = document.createElement("button");
+          openButton.type = "button";
+          openButton.className = "account-open-button";
+          openButton.setAttribute("aria-label", "Open details for account " + (subscription.account_number || ""));
+
+          const accountLabel = document.createElement("p");
+          accountLabel.className = "package-label";
+          accountLabel.textContent = "SAMKAR ACCOUNT NUMBER";
+          const accountNumber = document.createElement("h3");
+          accountNumber.className = "package-speed";
+          accountNumber.style.fontSize = "1.35rem";
+          accountNumber.style.overflowWrap = "anywhere";
+          accountNumber.textContent = subscription.account_number || "Account number not assigned";
+          const packageName = document.createElement("p");
+          packageName.style.fontWeight = "700";
+          packageName.textContent = subscription.package_name || "Home Fibre Internet";
+          const location = document.createElement("p");
+          location.className = "package-note";
+          location.textContent = "Service location: " + (subscription.service_location || "Not specified");
+          const accountStatus = document.createElement("p");
+          accountStatus.className = "package-note";
+          accountStatus.textContent = "Account status: " + humanStatus(subscription.status);
+          const hint = document.createElement("p");
+          hint.className = "open-hint";
+          hint.textContent = "Click to open account details and services →";
+          openButton.append(accountLabel, accountNumber, packageName, location, accountStatus, hint);
+          openButton.addEventListener("click", () => openAccountDetails(subscription));
+          card.appendChild(openButton);
+          fragment.appendChild(card);
+        });
+
+        list.appendChild(fragment);
+        showMessage(status, data.length + (data.length === 1 ? " internet account found. Select it to open its details." : " internet accounts found. Select an account to open its details."), "success");
+      }
+
+      let customerSubscriptions = [];
+      let customerInvoices = [];
+      let customerPayments = [];
+
+      function moneyNumber(value) {
+        const number = Number(value || 0);
+        return Number.isFinite(number) ? number : 0;
+      }
+
+      function formatDateOnly(value) {
+        if (!value) return "Not specified";
+        const date = new Date(value + "T00:00:00");
+        return Number.isNaN(date.getTime()) ? "Not specified" : date.toLocaleDateString("en-KE", { dateStyle: "medium" });
+      }
+
+      function statusClass(value) {
+        return String(value || "pending").toLowerCase().replace(/[^a-z0-9_-]/g, "-");
+      }
+
+      function accountForRecord(record) {
+        if (record.account_number) return record.account_number;
+        const invoice = customerInvoices.find((item) => item.id === record.invoice_id);
+        if (invoice && invoice.account_number) return invoice.account_number;
+        const subscription = customerSubscriptions.find((item) => item.id === (record.subscription_id || invoice?.subscription_id));
+        return subscription?.account_number || "Account number unavailable";
+      }
+
+      function invoicePaymentTotal(invoiceId) {
+        return customerPayments
+          .filter((payment) => payment.invoice_id === invoiceId && payment.status === "confirmed")
+          .reduce((total, payment) => total + moneyNumber(payment.amount_kes), 0);
+      }
+
+      function invoiceRemaining(invoice) {
+        if (String(invoice.status || "").toLowerCase() === "paid") return 0;
+        return Math.max(0, moneyNumber(invoice.amount_due_kes) - invoicePaymentTotal(invoice.id));
+      }
+
+      function subscriptionBalance(subscriptionId) {
+        return customerInvoices
+          .filter((invoice) => invoice.subscription_id === subscriptionId)
+          .reduce((balance, invoice) => {
+            if (String(invoice.status || "").toLowerCase() === "paid") return balance;
+            return balance + invoicePaymentTotal(invoice.id) - moneyNumber(invoice.amount_due_kes);
+          }, 0);
+      }
+
+      function renderBalanceSummary() {
+        const outstanding = customerInvoices.reduce((sum, invoice) => sum + invoiceRemaining(invoice), 0);
+        const confirmed = customerPayments
+          .filter((payment) => payment.status === "confirmed")
+          .reduce((sum, payment) => sum + moneyNumber(payment.amount_kes), 0);
+        const netBalance = customerInvoices.reduce((sum, invoice) => {
+          if (String(invoice.status || "").toLowerCase() === "paid") return sum;
+          return sum + invoicePaymentTotal(invoice.id) - moneyNumber(invoice.amount_due_kes);
+        }, 0);
+        const balance = $("totalBalance");
+        balance.textContent = (netBalance < 0 ? "−" : netBalance > 0 ? "+" : "") + formatMoney(Math.abs(netBalance));
+        balance.className = "balance-amount" + (netBalance < 0 ? " negative" : netBalance > 0 ? " positive" : "");
+        $("outstandingTotal").textContent = formatMoney(outstanding);
+        $("confirmedTotal").textContent = formatMoney(confirmed);
+        $("balanceExplanation").textContent = netBalance < 0
+          ? "You currently owe " + formatMoney(Math.abs(netBalance)) + ". A negative balance means charges are still outstanding."
+          : netBalance > 0
+            ? "You have a positive balance of " + formatMoney(netBalance) + " from confirmed payments against unpaid invoices."
+            : "Your recorded invoices and confirmed payments are currently balanced.";
+      }
+
+      function renderInvoices() {
+        const list = $("invoicesList");
+        list.replaceChildren();
+        if (!customerInvoices.length) {
+          const empty = document.createElement("div");
+          empty.className = "history-empty";
+          empty.textContent = "No invoices have been generated for your subscriptions yet.";
+          list.appendChild(empty);
+          showMessage($("invoicesStatus"), "No invoices found.");
+          return;
+        }
+        customerInvoices.forEach((invoice) => {
+          const card = document.createElement("article");
+          card.className = "history-card";
+          const title = document.createElement("h3");
+          title.textContent = accountForRecord({ account_number: invoice.account_number, subscription_id: invoice.subscription_id }) + " · Invoice";
+          const amount = document.createElement("p");
+          amount.className = "package-price";
+          amount.textContent = formatMoney(invoice.amount_due_kes);
+          const period = document.createElement("p");
+          period.className = "history-line";
+          period.textContent = "Billing period: " + formatDateOnly(invoice.period_start) + " – " + formatDateOnly(invoice.period_end);
+          const due = document.createElement("p");
+          due.className = "history-line";
+          due.textContent = "Due date: " + formatDateOnly(invoice.due_date);
+          const remaining = document.createElement("p");
+          remaining.className = "history-line";
+          remaining.textContent = "Remaining amount: " + formatMoney(invoiceRemaining(invoice));
+          const statusLine = document.createElement("p");
+          statusLine.className = "history-line";
+          const badge = document.createElement("span");
+          const isOverdue = invoiceRemaining(invoice) > 0 && invoice.due_date && invoice.due_date < new Date().toISOString().slice(0, 10);
+          const displayStatus = isOverdue ? "overdue" : (invoice.status || "unpaid");
+          badge.className = "status-pill " + statusClass(displayStatus);
+          badge.textContent = humanStatus(displayStatus);
+          statusLine.append("Status: ", badge);
+          card.append(title, amount, period, due, remaining, statusLine);
+          list.appendChild(card);
+        });
+        showMessage($("invoicesStatus"), customerInvoices.length + (customerInvoices.length === 1 ? " invoice found." : " invoices found."), "success");
+      }
+
+      function renderPayments() {
+        const list = $("paymentsList");
+        list.replaceChildren();
+        if (!customerPayments.length) {
+          const empty = document.createElement("div");
+          empty.className = "history-empty";
+          empty.textContent = "No payment submissions are recorded for your account yet.";
+          list.appendChild(empty);
+          showMessage($("paymentsStatus"), "No payment submissions found.");
+          return;
+        }
+        customerPayments.forEach((payment) => {
+          const card = document.createElement("article");
+          card.className = "history-card";
+          const title = document.createElement("h3");
+          title.textContent = accountForRecord(payment) + " · Payment";
+          const amount = document.createElement("p");
+          amount.className = "package-price";
+          amount.textContent = formatMoney(payment.amount_kes);
+          const method = document.createElement("p");
+          method.className = "history-line";
+          method.textContent = "Payment method: " + (payment.payment_method || "Not specified");
+          const reference = document.createElement("p");
+          reference.className = "history-line";
+          reference.textContent = "Reference: " + (payment.transaction_reference || "Not provided");
+          const submitted = document.createElement("p");
+          submitted.className = "history-line";
+          submitted.textContent = "Submitted: " + (payment.submitted_at ? formatDate(payment.submitted_at) : "Date unavailable");
+          const statusLine = document.createElement("p");
+          statusLine.className = "history-line";
+          const badge = document.createElement("span");
+          badge.className = "status-pill " + statusClass(payment.status);
+          badge.textContent = humanStatus(payment.status);
+          statusLine.append("Status: ", badge);
+          card.append(title, amount, method, reference, submitted, statusLine);
+          list.appendChild(card);
+        });
+        showMessage($("paymentsStatus"), customerPayments.length + (customerPayments.length === 1 ? " payment record found." : " payment records found."), "success");
+      }
+
+      async function loadBillingHistory() {
+        showMessage($("billingStatus"), "Loading invoices and confirmed payments...");
+        showMessage($("invoicesStatus"), "Loading your invoices...");
+        showMessage($("paymentsStatus"), "Loading your payment history...");
+        const [invoiceResult, paymentResult] = await Promise.all([
+          supabaseClient.from("billing_invoices")
+            .select("id, subscription_id, user_id, account_number, customer_name, period_start, period_end, amount_due_kes, due_date, status, created_at")
+            .eq("user_id", currentUser.id)
+            .order("period_start", { ascending: false }),
+          supabaseClient.from("billing_payments")
+            .select("id, invoice_id, subscription_id, user_id, amount_kes, payment_method, transaction_reference, status, submitted_at, reviewed_at")
+            .eq("user_id", currentUser.id)
+            .order("submitted_at", { ascending: false })
+        ]);
+        let errors = [];
+        if (invoiceResult.error) {
+          console.error("Invoice loading error:", invoiceResult.error);
+          customerInvoices = [];
+          errors.push("invoices: " + invoiceResult.error.message);
+          showMessage($("invoicesStatus"), "Could not load invoices. Please check the billing_invoices customer-read RLS policy.", "error");
+        } else {
+          customerInvoices = invoiceResult.data || [];
+        }
+        if (paymentResult.error) {
+          console.error("Payment loading error:", paymentResult.error);
+          customerPayments = [];
+          errors.push("payments: " + paymentResult.error.message);
+          showMessage($("paymentsStatus"), "Could not load payment history. Please check the billing_payments customer-read RLS policy.", "error");
+        } else {
+          customerPayments = paymentResult.data || [];
+        }
+        renderBalanceSummary();
+        if (!invoiceResult.error) renderInvoices();
+        if (!paymentResult.error) renderPayments();
+        if (errors.length) {
+          showMessage($("billingStatus"), "Some billing information could not be loaded. " + errors.join(" | "), "error");
+        } else {
+          showMessage($("billingStatus"), "Billing information updated. Negative balance means an amount is owed; positive balance means a recorded credit.", "success");
+        }
+        // Re-render each account card now that invoice and payment totals are available.
+        await loadSubscriptions();
+      }
+
+      async function refreshBillingAndAccounts() {
+        const button = $("refreshBillingButton");
+        button.disabled = true;
+        button.textContent = "Refreshing...";
+        try {
+          await Promise.all([loadSubscriptions(), loadBillingHistory()]);
+        } catch (error) {
+          console.error("Billing refresh error:", error);
+          showMessage($("billingStatus"), "Could not refresh billing information. " + (error.message || "Please try again."), "error");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Refresh Billing";
+        }
+      }
+
+      async function loadProfile() {
+        const { data, error } = await supabaseClient
+          .from("profiles")
+          .select("full_name, phone, service_location")
+          .eq("id", currentUser.id)
+          .maybeSingle();
+        if (error) {
+          console.error("Profile loading error:", error);
+          showMessage(
+            $("profileMessage"),
+            "We could not load your profile. Please try again.",
+            "error"
+          );
+          return;
+        }
+        if (!data) {
+          $("fullName").value = "";
+          $("phone").value = "";
+          $("profileLocation").value = "Nyahururu";
+          $("displayName").textContent = "Not saved yet";
+          $("displayPhone").textContent = "Not saved yet";
+          $("displayLocation").textContent = "Nyahururu";
+          return;
+        }
+        $("fullName").value = data.full_name || "";
+        $("phone").value = data.phone || "";
+        $("profileLocation").value = data.service_location || "Nyahururu";
+        $("displayName").textContent = data.full_name || "Not provided";
+        $("displayPhone").textContent = data.phone || "Not provided";
+        $("displayLocation").textContent =
+          data.service_location || "Nyahururu";
+        locationSelect.value = data.service_location || "Nyahururu";
+        hideMessage($("profileMessage"));
+      }
+      profileForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!currentUser) {
+          showMessage(
+            $("profileMessage"),
+            "Your session has expired. Please sign in again.",
+            "error"
+          );
+          return;
+        }
+        const fullName = $("fullName").value.trim();
+        const phone = $("phone").value.trim();
+        const serviceLocation = $("profileLocation").value;
+        if (!fullName || !phone || !serviceLocation) {
+          showMessage(
+            $("profileMessage"),
+            "Please complete all three fields.",
+            "error"
+          );
+          return;
+        }
+        saveProfileButton.disabled = true;
+        saveProfileButton.textContent = "Saving...";
+        try {
+          const { data, error } = await supabaseClient
+            .from("profiles")
+            .upsert({
+              id: currentUser.id,
+              full_name: fullName,
+              phone: phone,
+              service_location: serviceLocation,
+              updated_at: new Date().toISOString()
+            }, {
+              onConflict: "id"
+            })
+            .select("full_name, phone, service_location")
+            .single();
+          if (error) throw error;
+          $("displayName").textContent = data.full_name;
+          $("displayPhone").textContent = data.phone;
+          $("displayLocation").textContent = data.service_location;
+          locationSelect.value = data.service_location;
+          showMessage(
+            $("profileMessage"),
+            "Your customer profile has been saved successfully!",
+            "success"
+          );
+          await renderPackages(data.service_location);
+        } catch (error) {
+          console.error("Profile save error:", error);
+          showMessage(
+            $("profileMessage"),
+            "Could not save your profile. " +
+              (error.message || "Please try again."),
+            "error"
+          );
+        } finally {
+          saveProfileButton.disabled = false;
+          saveProfileButton.textContent = "Save Profile";
+        }
+      });
+      function formatDate(value) {
+        if (!value) return "Date unavailable";
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? "Date unavailable" :
+          date.toLocaleString("en-KE", { dateStyle: "medium", timeStyle: "short" });
+      }
+      async function loadRequests() {
+        const status = $("requestsStatus");
+        const list = $("requestsList");
+        list.replaceChildren();
+        showMessage(status, "Loading your requests...");
+        const { data, error } = await supabaseClient
+          .from("service_requests")
+          .select("id, request_type, phone, details, service_location, package_name, speed_mbps, monthly_price_kes, status, created_at")
+          .eq("user_id", currentUser.id)
+          .order("created_at", { ascending: false });
+        if (error) {
+          console.error("Request loading error:", error);
+          showMessage(status, "Could not load requests. Please check the service_requests table and its RLS policies.", "error");
+          return;
+        }
+        if (!data || data.length === 0) {
+          showMessage(status, "You have not submitted any requests yet.");
+          return;
+        }
+        data.forEach((request) => {
+          const card = document.createElement("article");
+          card.className = "package-card";
+          const title = document.createElement("h3");
+          title.className = "package-speed";
+          title.style.fontSize = "1.15rem";
+          title.textContent = request.request_type || "Service request";
+          const statusLine = document.createElement("p");
+          statusLine.className = "package-price";
+          statusLine.textContent = "Status: " + (request.status || "pending").replace(/_/g, " ");
+          const location = document.createElement("p");
+          location.className = "package-note";
+          location.textContent = "Location: " + (request.service_location || "Not specified");
+          const date = document.createElement("p");
+          date.className = "package-note";
+          date.textContent = "Submitted: " + formatDate(request.created_at);
+          card.append(title, statusLine, location);
+          if (request.package_name || request.speed_mbps) {
+            const pkg = document.createElement("p");
+            pkg.className = "package-note";
+            pkg.textContent = "Package: " + (request.package_name || "Home Fibre") +
+              (request.speed_mbps ? " · " + request.speed_mbps + " Mbps" : "") +
+              (request.monthly_price_kes != null ? " · KSh " + Number(request.monthly_price_kes).toLocaleString("en-KE") + "/month" : "");
+            card.appendChild(pkg);
+          }
+          const details = document.createElement("p");
+          details.className = "package-note";
+          details.style.marginTop = "8px";
+          details.textContent = request.details || "";
+          card.append(date, details);
+          list.appendChild(card);
+        });
+        showMessage(status, data.length + " request(s) found.", "success");
+      }
+      $("refreshSubscriptionsButton").addEventListener("click", async () => {
+        const button = $("refreshSubscriptionsButton");
+        button.disabled = true;
+        try {
+          await loadSubscriptions();
+        } catch (error) {
+          console.error("Subscription refresh error:", error);
+          showMessage($("subscriptionsStatus"), "Could not refresh your internet accounts. Please try again.", "error");
+        } finally {
+          button.disabled = false;
+        }
+      });
+
+      $("refreshRequestsButton").addEventListener("click", async () => {
+        $("refreshRequestsButton").disabled = true;
+        try {
+          await loadRequests();
+        } catch (error) {
+          console.error(error);
+          showMessage($("requestsStatus"), "Could not refresh your requests.", "error");
+        } finally {
+          $("refreshRequestsButton").disabled = false;
+        }
+      });
+      $("clearSelectedPackage").addEventListener("click", () => {
+        selectedPackage = null;
+        $("selectedPackagePanel").hidden = true;
+      });
+      locationSelect.addEventListener("change", async () => {
+        try {
+          await renderPackages(locationSelect.value);
+        } catch (error) {
+          console.error("Package loading error:", error);
+          showMessage(
+            packageStatus,
+            "An unexpected error occurred while loading packages.",
+            "error"
+          );
+        }
+      });
+      $("logoutButton").addEventListener("click", async () => {
+        if (!supabaseClient) return;
+        logoutButton.disabled = true;
+        logoutButton.textContent = "Signing out...";
+        try {
+          const { error } = await supabaseClient.auth.signOut();
+          if (error) throw error;
+          window.location.replace("login.html");
+        } catch (error) {
+          console.error("Sign-out error:", error);
+          showMessage(
+            globalMessage,
+            "Could not sign out. Please try again.",
+            "error"
+          );
+          logoutButton.disabled = false;
+          logoutButton.textContent = "Sign Out";
+        }
+      });
+      $("refreshBillingButton").addEventListener("click", refreshBillingAndAccounts);
+      $("toggleManageBillingButton").addEventListener("click", () => {
+        const button = $("toggleManageBillingButton");
+        const content = $("manageBillingContent");
+        const isOpening = content.hidden;
+        content.hidden = !isOpening;
+        button.setAttribute("aria-expanded", String(isOpening));
+        button.textContent = isOpening ? "Close Manage Billing" : "Open Manage Billing";
+      });
+      $("refreshSubscriptionsButton").addEventListener("click", async () => {
+        const button = $("refreshSubscriptionsButton");
+        button.disabled = true;
+        try {
+          await Promise.all([loadSubscriptions(), loadBillingHistory()]);
+        } catch (error) {
+          console.error("Account refresh error:", error);
+          showMessage($("subscriptionsStatus"), "Could not refresh accounts. Please try again.", "error");
+        } finally {
+          button.disabled = false;
+        }
+      });
+      $("closeAccountDetailsButton").addEventListener("click", () => {
+        $("accountDetailsPanel").hidden = true;
+        selectedSubscription = null;
+      });
+      $("requestAccountServiceButton").addEventListener("click", () => {
+        if (!selectedSubscription) return;
+        const accountRef = selectedSubscription.account_number || selectedSubscription.id;
+        $("requestType").value = "Other";
+        $("requestDetails").value = "I need assistance with SAMKAR account " + accountRef + ". Please contact me regarding the service I need.";
+        $("requestPhone").value = $("phone").value.trim();
+        $("requestSection").scrollIntoView({ behavior: "smooth", block: "start" });
+        $("requestDetails").focus({ preventScroll: true });
+      });
+      $("accountPasswordForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const message = $("accountPasswordMessage");
+        const button = $("changeAccountPasswordButton");
+        const subscriptionId = $("wifiPasswordAccount").value;
+        const subscription = customerSubscriptions.find((item) => item.id === subscriptionId);
+        const requestedPassword = $("requestedWifiPassword").value;
+        const confirmedPassword = $("confirmRequestedWifiPassword").value;
+
+        if (!currentUser || !supabaseClient) {
+          showMessage(message, "Your session has expired. Please sign in again.", "error");
+          return;
+        }
+        if (!subscription) {
+          showMessage(message, "Please select the specific internet account whose WiFi password you want changed.", "error");
+          return;
+        }
+        if (requestedPassword.length < 8 || requestedPassword.length > 63) {
+          showMessage(message, "Your WiFi password must be between 8 and 63 characters.", "error");
+          return;
+        }
+        if (requestedPassword !== confirmedPassword) {
+          showMessage(message, "The two password entries do not match. Please check and try again.", "error");
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Submitting request...";
+        try {
+          const accountReference = subscription.account_number || subscription.id;
+          const requestDetails = [
+            "SAMKAR_WIFI_PASSWORD_CHANGE_REQUEST",
+            "Request category: WiFi account password change",
+            "Customer email: " + (currentUser.email || "Not available"),
+            "SAMKAR account number: " + accountReference,
+            "Subscription ID: " + subscription.id,
+            "Package: " + (subscription.package_name || "Not specified"),
+            "Service location: " + (subscription.service_location || "Not specified"),
+            "Requested WiFi password: " + requestedPassword,
+            "Admin action: Apply the requested password to this specific WiFi account, then update the request status."
+          ].join("\n");
+
+          const { error } = await supabaseClient
+            .from("service_requests")
+            .insert({
+              user_id: currentUser.id,
+              request_type: "Other",
+              phone: $("phone").value.trim() || currentUser.phone || "",
+              details: requestDetails,
+              service_location: subscription.service_location || $("profileLocation").value || locationSelect.value || "",
+              package_name: subscription.package_name || null,
+              speed_mbps: subscription.speed_mbps ?? null,
+              monthly_price_kes: subscription.monthly_price_kes ?? null,
+              status: "pending"
+            });
+
+          if (error) throw error;
+          $("accountPasswordForm").reset();
+          renderWifiPasswordAccountOptions();
+          showMessage(message, "Your WiFi password request has been submitted for the selected account. SAMKAR support will review it and update your request status.", "success");
+          await loadRequests();
+        } catch (error) {
+          console.error("WiFi password change request error:", error);
+          showMessage(message, "Could not submit your WiFi password request. " + (error.message || "Please try again or contact SAMKAR support."), "error");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Submit WiFi Password Request";
+        }
+      });
+
+      document.querySelectorAll("[data-notice]").forEach((button) => {
+        button.addEventListener("click", () => {
+          showMessage(globalMessage, button.dataset.notice);
+        });
+      });
+      $("supportForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const requestType = $("requestType").value;
+        const phone = $("requestPhone").value.trim();
+        const details = $("requestDetails").value.trim();
+        if (!currentUser) {
+          showMessage($("requestMessage"), "Your session has expired. Please sign in again.", "error");
+          return;
+        }
+        if (!requestType || !phone || !details) {
+          showMessage($("requestMessage"), "Please complete all fields.", "error");
+          return;
+        }
+        const submitButton = $("submitRequestButton");
+        submitButton.disabled = true;
+        submitButton.textContent = "Submitting...";
+        try {
+          const payload = {
+            user_id: currentUser.id,
+            request_type: requestType,
+            phone,
+            details,
+            service_location: $("profileLocation").value || locationSelect.value,
+            status: "pending"
+          };
+          if (selectedPackage && requestType === "New installation") {
+            payload.package_name = selectedPackage.package_name;
+            payload.speed_mbps = selectedPackage.speed_mbps;
+            payload.monthly_price_kes = selectedPackage.monthly_price_kes;
+            payload.service_location = selectedPackage.location;
+          }
+          const { error } = await supabaseClient.from("service_requests").insert(payload);
+          if (error) throw error;
+          showMessage($("requestMessage"),
+            "Your request was submitted successfully and saved to your SAMKAR account. You can track its status under My Requests.",
+            "success");
+          $("supportForm").reset();
+          $("requestPhone").value = $("phone").value.trim();
+          selectedPackage = null;
+          $("selectedPackagePanel").hidden = true;
+          await loadRequests();
+        } catch (error) {
+          console.error("Request submission error:", error);
+          showMessage($("requestMessage"),
+            "Could not submit your request. " + (error.message || "Please check the database setup and try again."),
+            "error");
+        } finally {
+          submitButton.disabled = false;
+          submitButton.textContent = "Submit Request";
+        }
+      });
+      async function startDashboard() {
+        try {
+          if (
+            !window.supabase ||
+            typeof SUPABASE_URL === "undefined" ||
+            typeof SUPABASE_PUBLISHABLE_KEY === "undefined"
+          ) {
+            throw new Error(
+              "Supabase configuration was not found. Check supabase-config.js."
+            );
+          }
+          supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+          );
+          const { data, error } = await supabaseClient.auth.getSession();
+          if (error) throw error;
+          if (!data.session) {
+            window.location.replace("login.html");
+            return;
+          }
+          currentUser = data.session.user;
+          const email = currentUser.email || "Client";
+          headerEmail.textContent = email;
+          $("profileEmail").textContent = email;
+          loadingScreen.hidden = true;
+          dashboard.hidden = false;
+          await loadProfile();
+          try {
+            await loadSubscriptions();
+          } catch (error) {
+            console.error("Initial subscription loading error:", error);
+            showMessage($("subscriptionsStatus"), "Could not load your internet accounts. Please refresh the page.", "error");
+          }
+          try {
+            await loadBillingHistory();
+          } catch (error) {
+            console.error("Initial billing history loading error:", error);
+            showMessage($("billingStatus"), "Could not load billing information. Please refresh the page.", "error");
+          }
+          try {
+            await renderPackages(locationSelect.value);
+          } catch (error) {
+            console.error("Initial package loading error:", error);
+            showMessage(
+              packageStatus,
+              "Could not load packages. Please refresh the page.",
+              "error"
+            );
+          }
+          try {
+            await loadRequests();
+          } catch (error) {
+            console.error("Initial request loading error:", error);
+            showMessage($("requestsStatus"), "Could not load your requests.", "error");
+          }
+        } catch (error) {
+          console.error("Dashboard startup error:", error);
+          loadingMessage.textContent =
+            error.message || "Could not connect. Please try again.";
+        }
+      }
+      startDashboard();
+    })();
+  </script>
+</body>
+</html>

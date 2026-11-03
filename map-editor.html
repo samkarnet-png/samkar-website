@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SAMKAR Network Solutions administrator map editor">
+  <title>Network Map Editor | SAMKAR Network Solutions</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css">
+  <style>
+    :root {
+      --navy: #061b38; --blue: #0757a5; --yellow: #ffc400;
+      --light: #f1f7fc; --ink: #17283d; --muted: #64748b;
+      --line: #d8e2ee; --danger: #b42318; --success: #16794b;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: var(--light); font: 15px/1.5 Arial, sans-serif; }
+    header { background: var(--navy); color: #fff; padding: 18px clamp(16px, 4vw, 42px); display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+    header h1 { margin:0; font-size:clamp(20px, 3vw, 28px); }
+    header p { margin:4px 0 0; color:#d8e7f7; font-size:13px; }
+    .header-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    main { max-width:1500px; margin:0 auto; padding:20px; }
+    .notice { padding:12px 14px; border-radius:10px; margin-bottom:14px; background:#fff; border:1px solid var(--line); }
+    .notice.error { border-color:#f1b8b4; color:var(--danger); background:#fff7f6; }
+    .notice.success { border-color:#a9ddc2; color:var(--success); background:#f2fff7; }
+    .layout { display:grid; grid-template-columns:minmax(0, 1fr) 340px; gap:18px; align-items:start; }
+    .panel { background:#fff; border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:0 5px 20px #061b380a; }
+    .panel-head { padding:15px 17px; border-bottom:1px solid var(--line); }
+    .panel-head h2 { margin:0; font-size:18px; }
+    .panel-head p { margin:5px 0 0; color:var(--muted); font-size:13px; }
+    #map { width:100%; height:min(72vh, 760px); min-height:450px; background:#e8eef4; }
+    .map-footer { padding:12px 16px; color:var(--muted); font-size:12px; border-top:1px solid var(--line); }
+    .side-body { padding:16px; }
+    label { display:block; font-weight:700; font-size:13px; margin:0 0 6px; }
+    input, select, textarea { display:block; width:100%; border:1px solid #c7d3e0; border-radius:8px; padding:10px 11px; color:var(--ink); background:#fff; font:inherit; margin-bottom:12px; }
+    textarea { min-height:78px; resize:vertical; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    button, .button { border:0; border-radius:8px; padding:10px 13px; background:var(--blue); color:#fff; font-weight:700; cursor:pointer; font:inherit; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; }
+    button:hover, .button:hover { filter:brightness(.94); }
+    button:disabled { opacity:.55; cursor:not-allowed; }
+    .secondary { background:#e8f0f8; color:var(--navy); }
+    .yellow { background:var(--yellow); color:var(--navy); }
+    .danger { background:#fff0ef; color:var(--danger); border:1px solid #f0c2be; }
+    .full { width:100%; }
+    .tool-row { display:flex; flex-wrap:wrap; gap:8px; }
+    .tool-row button { flex:1; min-width:130px; }
+    .help { font-size:12px; color:var(--muted); margin:-5px 0 12px; }
+    .feature-list { margin-top:16px; border-top:1px solid var(--line); padding-top:14px; }
+    .feature-list h3 { font-size:15px; margin:0 0 10px; }
+    .feature { border:1px solid var(--line); border-radius:9px; padding:10px; margin-bottom:8px; }
+    .feature strong { display:block; overflow-wrap:anywhere; }
+    .feature small { display:block; color:var(--muted); margin:3px 0 8px; }
+    .feature-actions { display:flex; gap:6px; flex-wrap:wrap; }
+    .feature-actions button { padding:6px 9px; font-size:12px; }
+    .tag { display:inline-block; border-radius:999px; padding:2px 8px; font-size:11px; font-weight:700; background:#edf2f7; color:#334155; margin:4px 4px 0 0; }
+    .tag.published { background:#e7f8ee; color:#146c43; }
+    #editorForm { display:none; border-top:1px solid var(--line); padding-top:15px; margin-top:15px; }
+    .auth-box { max-width:480px; margin:40px auto; padding:22px; }
+    .auth-box h2 { margin-top:0; }
+    .muted { color:var(--muted); font-size:13px; }
+    .hidden { display:none !important; }
+    .samkar-access-point { background:transparent; border:0; }
+    .samkar-access-point span { display:block; width:18px; height:18px; border-radius:50% 50% 50% 0; background:#d71920; border:3px solid #fff; box-shadow:0 1px 7px #17283d88; transform:rotate(-45deg); }
+    .samkar-access-point span::after { content:""; display:block; width:5px; height:5px; border-radius:50%; background:#fff; margin:3.5px auto; }
+    @media (max-width: 950px) {
+      .layout { grid-template-columns:1fr; }
+      #map { height:58vh; min-height:390px; }
+    }
+    @media (max-width: 560px) {
+      main { padding:12px; }
+      header { padding:15px; }
+      .grid2 { grid-template-columns:1fr; gap:0; }
+      #map { min-height:350px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>SAMKAR Network Map Editor</h1>
+    <p>Private administrator workspace · OpenStreetMap + Leaflet</p>
+  </div>
+  <div class="header-actions">
+    <a class="button secondary" href="admin-dashboard.html">Admin Dashboard</a>
+    <button id="refreshBtn" class="secondary" type="button">Refresh map</button>
+    <button id="logoutBtn" class="yellow" type="button">Sign out</button>
+  </div>
+</header>
+
+<main>
+  <div id="status" class="notice" role="status">Checking your administrator session…</div>
+
+  <section id="authPanel" class="panel auth-box hidden">
+    <h2>Administrator sign-in required</h2>
+    <p class="muted">Sign in with your existing SAMKAR administrator account. Map editing is not available to ordinary client accounts.</p>
+    <label for="email">Email address</label>
+    <input id="email" type="email" autocomplete="username" placeholder="admin@example.com">
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="current-password" placeholder="Your password">
+    <button id="loginBtn" class="full" type="button">Sign in</button>
+  </section>
+
+  <section id="editorApp" class="layout hidden">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Network map</h2>
+        <p>Use the drawing tools to add markers or draw a confirmed coverage polygon. Click an existing item to inspect it.</p>
+      </div>
+      <div id="map" aria-label="Interactive SAMKAR network map"></div>
+      <div class="map-footer">
+        Map data © OpenStreetMap contributors. Do not publish exact infrastructure positions unless you intend them to be public.
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px">
+          <a href="https://www.carto.com/basemaps/apikey/index.html" target="_blank" rel="noopener">Get a CARTO basemap key</a>
+          <input id="cartoApiKey" type="password" autocomplete="off" placeholder="Optional CARTO basemap API key" style="max-width:330px;margin:0">
+          <button id="applyCartoKeyBtn" class="secondary" type="button">Apply map key</button>
+          <button id="clearCartoKeyBtn" class="secondary" type="button">Clear</button>
+          <span id="tileKeyStatus" class="muted" aria-live="polite"></span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="panel">
+      <div class="panel-head">
+        <h2>Map controls</h2>
+        <p>Save new features as drafts first. Publish only after verifying details on the ground.</p>
+      </div>
+      <div class="side-body">
+        <div class="tool-row">
+          <button id="addMarkerBtn" type="button">＋ Add point</button>
+          <button id="drawPolygonBtn" class="secondary" type="button">Draw coverage</button>
+        </div>
+        <p class="help">Add point: click the map to place it. Draw coverage: click around the area, then finish the polygon.</p>
+
+        <div id="editorForm">
+          <h3 id="formHeading">New map feature</h3>
+          <form id="featureForm">
+            <input id="featureId" type="hidden">
+            <label for="featureName">Name *</label>
+            <input id="featureName" maxlength="120" required placeholder="e.g. Nyahururu Main Mast">
+            <label for="featureType">Feature type *</label>
+            <select id="featureType" required>
+              <option value="mast">Mast / tower</option>
+              <option value="equipment">Network equipment</option>
+              <option value="installation">Existing installation</option>
+              <option value="coverage">Service coverage area</option>
+              <option value="power_point">Power / relay point</option>
+              <option value="other">Other</option>
+            </select>
+            <div class="grid2">
+              <div>
+                <label for="powerValue">Power / signal value</label>
+                <input id="powerValue" type="number" step="any" placeholder="Optional">
+              </div>
+              <div>
+                <label for="powerUnit">Unit</label>
+                <select id="powerUnit">
+                  <option value="">Not specified</option>
+                  <option value="W">W (watts)</option>
+                  <option value="kW">kW (kilowatts)</option>
+                  <option value="dBm">dBm (signal/RF)</option>
+                  <option value="V">V (volts)</option>
+                  <option value="dBi">dBi (antenna gain)</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            <label for="description">Notes / equipment details</label>
+            <textarea id="description" maxlength="2000" placeholder="Equipment installed, verified service notes, or other details"></textarea>
+            <label for="published">
+              <input id="published" type="checkbox" style="display:inline;width:auto;margin:0 6px 0 0">
+              Publish this feature on the public map
+            </label>
+            <p class="help">Publishing makes the feature visible on the public map when the public map page is installed. Avoid exposing sensitive infrastructure details.</p>
+            <div class="tool-row">
+              <button id="saveBtn" type="submit">Save feature</button>
+              <button id="cancelEditBtn" class="secondary" type="button">Cancel</button>
+            </div>
+            <button id="deleteBtn" class="danger full hidden" type="button" style="margin-top:8px">Delete feature</button>
+          </form>
+        </div>
+
+        <div class="feature-list">
+          <h3>Saved features <span id="featureCount" class="tag">0</span></h3>
+          <div class="grid2">
+            <div>
+              <label for="visibilityFilter">Show</label>
+              <select id="visibilityFilter">
+                <option value="all">All features</option>
+                <option value="draft">Drafts only</option>
+                <option value="published">Published only</option>
+              </select>
+            </div>
+            <div>
+              <label for="typeFilter">Type</label>
+              <select id="typeFilter">
+                <option value="all">All types</option>
+                <option value="mast">Masts / towers</option>
+                <option value="equipment">Equipment</option>
+                <option value="installation">Installations</option>
+                <option value="coverage">Coverage areas</option>
+                <option value="power_point">Power / relay points</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div id="featureList"></div>
+        </div>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+<script>
+  // Existing SAMKAR project configuration. Publishable key is intended for browser use.
+  const SUPABASE_URL = "https://nslhngxarkhtcnskhrsq.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_4tRM5qgAR48h1yIsVljHxQ_s8vPPOMF";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+  const $ = (id) => document.getElementById(id);
+  const statusEl = $("status");
+  const authPanel = $("authPanel");
+  const editorApp = $("editorApp");
+  let map = null;
+  let drawnItems = null;
+  let mapFeatures = [];
+  let layerById = new Map();
+  let currentGeometry = null;
+  let currentLayer = null;
+  let isAdmin = false;
+  let addingMarker = false;
+  let baseTileLayer = null;
+
+  function addBasemap(key = "") {
+    if (baseTileLayer && map) map.removeLayer(baseTileLayer);
+    const tileUrl = "https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" + (key ? "?key=" + encodeURIComponent(key) : "");
+    baseTileLayer = L.tileLayer(tileUrl, {
+      maxZoom: 20,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'
+    }).addTo(map);
+    baseTileLayer.on("tileerror", () => {
+      $("tileKeyStatus").textContent = key
+        ? "Tiles failed. Check the CARTO key and try again."
+        : "Basemap may require a CARTO key. Paste one above and apply it.";
+    });
+    baseTileLayer.on("tileload", () => {
+      $("tileKeyStatus").textContent = key ? "CARTO key applied." : "Map tiles loaded.";
+    });
+  }
+
+  function setStatus(message, kind = "") {
+    statusEl.className = "notice" + (kind ? " " + kind : "");
+    statusEl.textContent = message;
+  }
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, ch => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    }[ch]));
+  }
+  function typeLabel(type) {
+    return ({
+      mast:"Mast / tower", equipment:"Network equipment",
+      installation:"Existing installation", coverage:"Service coverage area",
+      power_point:"Power / relay point", other:"Other"
+    })[type] || type || "Other";
+  }
+
+  async function checkAdmin() {
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+    if (userError || !user) {
+      isAdmin = false;
+      editorApp.classList.add("hidden");
+      authPanel.classList.remove("hidden");
+      setStatus("Please sign in with your existing SAMKAR administrator account.");
+      return false;
+    }
+    // This RPC is part of the existing SAMKAR admin setup.
+    const { data, error } = await supabaseClient.rpc("is_samkar_admin");
+    if (error || data !== true) {
+      isAdmin = false;
+      editorApp.classList.add("hidden");
+      authPanel.classList.add("hidden");
+      setStatus("This account is not authorized to edit the network map. Sign in with a SAMKAR administrator account. If you are the admin, confirm that public.is_samkar_admin() exists and returns true for your account.", "error");
+      return false;
+    }
+    isAdmin = true;
+    authPanel.classList.add("hidden");
+    editorApp.classList.remove("hidden");
+    setStatus("Administrator verified. Map editor ready.");
+    initializeMap();
+    await loadFeatures();
+    return true;
+  }
+
+  function initializeMap() {
+    if (map) { setTimeout(() => map.invalidateSize(), 100); return; }
+    // General Nyahururu starting view only; no mast coordinates or coverage are invented.
+    map = L.map("map").setView([-0.0333, 36.3667], 12);
+    // CARTO basemap key is optional to enter here; if the provider requires one,
+    // the administrator can apply it without changing the Supabase setup.
+    const savedCartoKey = localStorage.getItem("samkar_carto_basemap_key") || "";
+    $("cartoApiKey").value = savedCartoKey;
+    addBasemap(savedCartoKey);
+    drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+
+    map.on(L.Draw.Event.CREATED, (event) => {
+      const layer = event.layer;
+      if (event.layerType === "polygon") {
+        layer.setStyle({ color: "#ffc400", weight: 7, opacity: 1, fillColor: "#ffc400", fillOpacity: 0.18 });
+      }
+      drawnItems.addLayer(layer);
+      currentLayer = layer;
+      currentGeometry = layer.toGeoJSON().geometry;
+      openForm(null, event.layerType === "polygon" ? "coverage" : "mast");
+      if (event.layerType === "polygon") $("featureType").value = "coverage";
+    });
+    map.on("click", (event) => {
+      if (!addingMarker) return;
+      addingMarker = false;
+      $("addMarkerBtn").textContent = "＋ Add point";
+      const marker = L.marker(event.latlng, { draggable: true, icon: accessPointIcon() });
+      drawnItems.addLayer(marker);
+      currentLayer = marker;
+      currentGeometry = marker.toGeoJSON().geometry;
+      openForm(null, "mast");
+      marker.on("dragend", () => { currentGeometry = marker.toGeoJSON().geometry; });
+    });
+    map.on("draw:edited", () => {
+      // The changed geometry is picked up when the feature is opened and saved.
+      setStatus("Geometry changed on the map. Open the feature and save it to keep the new position.", "success");
+    });
+    const drawControl = new L.Control.Draw({
+      draw: {
+        marker: false, circle: false, circlemarker: false, rectangle: false, polyline: false,
+        polygon: { allowIntersection: false, showArea: true, shapeOptions: { color: "#ffc400", weight: 7, opacity: 1, fillColor: "#ffc400", fillOpacity: 0.18 } }
+      },
+      edit: { featureGroup: drawnItems, edit: true, remove: false }
+    });
+    map.addControl(drawControl);
+  }
+
+  function accessPointIcon() {
+    return L.divIcon({ className: "samkar-access-point", html: "<span></span>", iconSize: [24, 30], iconAnchor: [12, 28], popupAnchor: [0, -26] });
+  }
+
+  function layerForFeature(feature) {
+    const geo = { type:"Feature", properties:{}, geometry:feature.geometry };
+    let layer;
+    const style = feature.feature_type === "coverage"
+      ? { color: "#ffc400", weight: 7, opacity: 1, fillColor: "#ffc400", fillOpacity: 0.18 }
+      : { color: "#0757a5", weight: 3, opacity: 0.9, fillOpacity: 0.12 };
+    try {
+      layer = L.geoJSON(geo, {
+        style,
+        pointToLayer: (_feature, latlng) => L.marker(latlng, { icon: accessPointIcon(), draggable: true })
+      }).getLayers()[0];
+    } catch (_) { return null; }
+    if (!layer) return null;
+    if (layer instanceof L.Marker) {
+      if (layer.setIcon) layer.setIcon(accessPointIcon());
+      if (layer.dragging) layer.dragging.enable();
+      layer.on("dragend", () => {
+        currentLayer = layer;
+        currentGeometry = layer.toGeoJSON().geometry;
+        openForm(feature, feature.feature_type);
+        setStatus("Marker moved. Save the feature to store the new coordinates.");
+      });
+    }
+    const power = feature.power_value !== null && feature.power_value !== undefined && feature.power_value !== ""
+      ? `<br>Power / signal: ${escapeHtml(feature.power_value)} ${escapeHtml(feature.power_unit || "")}` : "";
+    layer.bindPopup(`<strong>${escapeHtml(feature.name)}</strong><br>${escapeHtml(typeLabel(feature.feature_type))}${power}<br><span>${feature.is_published ? "Published" : "Draft"}</span>`);
+    layer.on("click", () => {
+      currentLayer = layer;
+      currentGeometry = layer.toGeoJSON().geometry;
+      openForm(feature, feature.feature_type);
+    });
+    return layer;
+  }
+
+  async function loadFeatures() {
+    if (!isAdmin) return;
+    setStatus("Loading saved map features…");
+    const { data, error } = await supabaseClient.from("network_map_features")
+      .select("id,name,feature_type,description,power_value,power_unit,geometry,is_published,created_by,updated_at")
+      .order("created_at", { ascending: false });
+    if (error) {
+      setStatus("Could not load map features: " + error.message + ". Run samkar-network-map.sql in Supabase SQL Editor first.", "error");
+      return;
+    }
+    mapFeatures = data || [];
+    drawnItems.clearLayers();
+    layerById.clear();
+    for (const feature of mapFeatures) {
+      const layer = layerForFeature(feature);
+      if (layer) {
+        layer.featureId = feature.id;
+        drawnItems.addLayer(layer);
+        layerById.set(feature.id, layer);
+      }
+    }
+    renderFeatureList();
+    setStatus(`Loaded ${mapFeatures.length} saved map feature(s). Drafts are not shown on the public map.`);
+  }
+
+  function renderFeatureList() {
+    const visibility = $("visibilityFilter").value;
+    const type = $("typeFilter").value;
+    const rows = mapFeatures.filter(f =>
+      (visibility === "all" || (visibility === "published" ? f.is_published : !f.is_published)) &&
+      (type === "all" || f.feature_type === type)
+    );
+    $("featureCount").textContent = String(rows.length);
+    const target = $("featureList");
+    if (!rows.length) {
+      target.innerHTML = '<p class="muted">No matching saved features yet. Use “Add point” or “Draw coverage” to begin.</p>';
+      return;
+    }
+    target.innerHTML = rows.map(f => `
+      <article class="feature">
+        <strong>${escapeHtml(f.name)}</strong>
+        <small>${escapeHtml(typeLabel(f.feature_type))}${f.power_value !== null && f.power_value !== "" ? " · " + escapeHtml(f.power_value) + " " + escapeHtml(f.power_unit || "") : ""}</small>
+        <span class="tag ${f.is_published ? "published" : ""}">${f.is_published ? "Published" : "Draft"}</span>
+        <div class="feature-actions" style="margin-top:8px">
+          <button class="secondary" type="button" data-action="focus" data-id="${escapeHtml(f.id)}">View / edit</button>
+          <button class="${f.is_published ? "secondary" : "yellow"}" type="button" data-action="toggle" data-id="${escapeHtml(f.id)}">${f.is_published ? "Unpublish" : "Publish"}</button>
+        </div>
+      </article>`).join("");
+  }
+
+  function openForm(feature = null, defaultType = "mast") {
+    $("editorForm").style.display = "block";
+    $("formHeading").textContent = feature ? "Edit map feature" : "New map feature";
+    $("featureId").value = feature?.id || "";
+    $("featureName").value = feature?.name || "";
+    $("featureType").value = feature?.feature_type || defaultType;
+    $("powerValue").value = feature?.power_value ?? "";
+    $("powerUnit").value = feature?.power_unit || "";
+    $("description").value = feature?.description || "";
+    $("published").checked = Boolean(feature?.is_published);
+    $("deleteBtn").classList.toggle("hidden", !feature);
+    if (feature) {
+      const layer = layerById.get(feature.id);
+      currentLayer = layer || currentLayer;
+      // Prefer the live layer geometry so drag/edit changes are saved, not overwritten
+      // by the previous database geometry.
+      currentGeometry = currentLayer ? currentLayer.toGeoJSON().geometry : feature.geometry;
+    }
+  }
+  function closeForm() {
+    $("editorForm").style.display = "none";
+    $("featureForm").reset();
+    $("featureId").value = "";
+    currentGeometry = null;
+    currentLayer = null;
+  }
+
+  async function saveFeature(event) {
+    event.preventDefault();
+    if (!isAdmin) return setStatus("Administrator permission is required.", "error");
+    if (!currentGeometry && currentLayer) currentGeometry = currentLayer.toGeoJSON().geometry;
+    if (!currentGeometry) return setStatus("Place a point or draw a coverage polygon on the map first.", "error");
+    const id = $("featureId").value || null;
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    const payload = {
+      name: $("featureName").value.trim(),
+      feature_type: $("featureType").value,
+      description: $("description").value.trim() || null,
+      power_value: $("powerValue").value === "" ? null : Number($("powerValue").value),
+      power_unit: $("powerUnit").value || null,
+      geometry: currentGeometry,
+      is_published: $("published").checked,
+      updated_at: new Date().toISOString()
+    };
+    if (!payload.name) return setStatus("Enter a name for this map feature.", "error");
+    if (!id) payload.created_by = user.id;
+
+    $("saveBtn").disabled = true;
+    try {
+      let result;
+      if (id) result = await supabaseClient.from("network_map_features").update(payload).eq("id", id).select().single();
+      else result = await supabaseClient.from("network_map_features").insert(payload).select().single();
+      if (result.error) throw result.error;
+      closeForm();
+      await loadFeatures();
+      setStatus("Map feature saved successfully.", "success");
+    } catch (error) {
+      setStatus("Could not save feature: " + error.message, "error");
+    } finally { $("saveBtn").disabled = false; }
+  }
+
+  async function togglePublish(id) {
+    const feature = mapFeatures.find(f => f.id === id);
+    if (!feature) return;
+    const next = !feature.is_published;
+    const promptText = next
+      ? "Publish this feature? It will be visible to visitors of the public map. Confirm the location and remove sensitive infrastructure details first."
+      : "Unpublish this feature from the public map?";
+    if (!window.confirm(promptText)) return;
+    const { error } = await supabaseClient.from("network_map_features")
+      .update({ is_published: next, updated_at: new Date().toISOString() }).eq("id", id);
+    if (error) return setStatus("Publish status was not changed: " + error.message, "error");
+    await loadFeatures();
+    setStatus(next ? "Feature published." : "Feature unpublished.", "success");
+  }
+
+  async function deleteFeature() {
+    const id = $("featureId").value;
+    if (!id || !window.confirm("Permanently delete this map feature? This cannot be undone.")) return;
+    const { error } = await supabaseClient.from("network_map_features").delete().eq("id", id);
+    if (error) return setStatus("Could not delete feature: " + error.message, "error");
+    closeForm();
+    await loadFeatures();
+    setStatus("Feature deleted.", "success");
+  }
+
+  $("applyCartoKeyBtn").addEventListener("click", () => {
+    const key = $("cartoApiKey").value.trim();
+    if (key) localStorage.setItem("samkar_carto_basemap_key", key);
+    else localStorage.removeItem("samkar_carto_basemap_key");
+    if (map) addBasemap(key);
+    $("tileKeyStatus").textContent = key ? "Key applied. If tiles remain blank, verify the key with CARTO." : "No key saved. A basemap key may be required.";
+  });
+  $("clearCartoKeyBtn").addEventListener("click", () => {
+    $("cartoApiKey").value = "";
+    localStorage.removeItem("samkar_carto_basemap_key");
+    if (map) addBasemap("");
+    $("tileKeyStatus").textContent = "Saved key cleared.";
+  });
+
+  $("loginBtn").addEventListener("click", async () => {
+    const email = $("email").value.trim(), password = $("password").value;
+    if (!email || !password) return setStatus("Enter your email and password.", "error");
+    $("loginBtn").disabled = true;
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    $("loginBtn").disabled = false;
+    if (error) return setStatus("Sign-in failed: " + error.message, "error");
+    $("password").value = "";
+    await checkAdmin();
+  });
+  $("logoutBtn").addEventListener("click", async () => {
+    await supabaseClient.auth.signOut();
+    window.location.reload();
+  });
+  $("refreshBtn").addEventListener("click", loadFeatures);
+  $("addMarkerBtn").addEventListener("click", () => {
+    addingMarker = !addingMarker;
+    $("addMarkerBtn").textContent = addingMarker ? "Click map to place…" : "＋ Add point";
+    setStatus(addingMarker ? "Click the map where the real equipment or installation is located." : "Point placement cancelled.");
+  });
+  $("drawPolygonBtn").addEventListener("click", () => {
+    if (!map) return;
+    new L.Draw.Polygon(map, { allowIntersection:false, showArea:true }).enable();
+    setStatus("Click around the verified coverage area, then finish the polygon. Do not estimate boundaries.");
+  });
+  $("featureForm").addEventListener("submit", saveFeature);
+  $("cancelEditBtn").addEventListener("click", closeForm);
+  $("deleteBtn").addEventListener("click", deleteFeature);
+  $("visibilityFilter").addEventListener("change", renderFeatureList);
+  $("typeFilter").addEventListener("change", renderFeatureList);
+  $("featureList").addEventListener("click", async (event) => {
+    const button = event.target.closest("button[data-action]");
+    if (!button) return;
+    const id = button.dataset.id;
+    if (button.dataset.action === "toggle") return togglePublish(id);
+    const feature = mapFeatures.find(f => f.id === id);
+    const layer = layerById.get(id);
+    if (!feature || !layer) return;
+    currentLayer = layer;
+    currentGeometry = layer.toGeoJSON().geometry;
+    openForm(feature, feature.feature_type);
+    if (layer.getBounds) map.fitBounds(layer.getBounds(), { padding:[30,30], maxZoom:16 });
+    else if (layer.getLatLng) map.setView(layer.getLatLng(), Math.max(map.getZoom(), 16));
+    layer.openPopup?.();
+  });
+
+  checkAdmin();
+</script>
+</body>
+</html>
